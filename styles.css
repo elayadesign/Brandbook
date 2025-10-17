@@ -114,6 +114,11 @@ body {
     justify-content: center;
     padding: 4px;
     border-radius: 8px;
+    color: #1D1B20;
+}
+
+.nav-item.active .nav-icon {
+    color: #ffffff;
 }
 
 .nav-item span {
