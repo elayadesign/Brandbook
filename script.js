@@ -132,10 +132,104 @@ function showLogosContent() {
         logosContent = document.createElement('div');
         logosContent.className = 'logos-content';
         logosContent.innerHTML = createLogoVariant('Main Logo', 'Primary', 'Secondary');
+        
+        // Add plus button for adding new components
+        const addButton = document.createElement('button');
+        addButton.className = 'add-component-btn';
+        addButton.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                <path d="M10 6v8M6 10h8" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Add Logo Variant
+        `;
+        addButton.addEventListener('click', showAddComponentModal);
+        
+        logosContent.appendChild(addButton);
         mainContent.appendChild(logosContent);
     }
     
     logosContent.style.display = 'block';
+}
+
+// Show modal for adding new component
+function showAddComponentModal() {
+    const modal = document.createElement('div');
+    modal.className = 'add-component-modal';
+    modal.innerHTML = `
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <h3>Add New Logo Variant</h3>
+                <div class="form-group">
+                    <label for="componentTitle">Component Title:</label>
+                    <input type="text" id="componentTitle" placeholder="e.g., App Icons, Social Media, etc." />
+                </div>
+                <div class="form-group">
+                    <label for="variant1Name">First Variant Name:</label>
+                    <input type="text" id="variant1Name" placeholder="e.g., Primary, Light, Square" />
+                </div>
+                <div class="form-group">
+                    <label for="variant2Name">Second Variant Name:</label>
+                    <input type="text" id="variant2Name" placeholder="e.g., Secondary, Dark, Circle" />
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-cancel">Cancel</button>
+                    <button class="btn-add">Add Component</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Focus on first input
+    modal.querySelector('#componentTitle').focus();
+    
+    // Event listeners
+    modal.querySelector('.btn-cancel').addEventListener('click', () => {
+        document.body.removeChild(modal);
+    });
+    
+    modal.querySelector('.btn-add').addEventListener('click', () => {
+        const title = modal.querySelector('#componentTitle').value.trim();
+        const variant1 = modal.querySelector('#variant1Name').value.trim();
+        const variant2 = modal.querySelector('#variant2Name').value.trim();
+        
+        if (title && variant1 && variant2) {
+            addLogoVariantComponent(title, variant1, variant2);
+            document.body.removeChild(modal);
+        } else {
+            alert('Please fill in all fields');
+        }
+    });
+    
+    // Close on overlay click
+    modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
+        if (e.target === modal.querySelector('.modal-overlay')) {
+            document.body.removeChild(modal);
+        }
+    });
+}
+
+// Add new logo variant component
+function addLogoVariantComponent(title, variant1, variant2) {
+    const logosContent = document.querySelector('.logos-content');
+    const addButton = logosContent.querySelector('.add-component-btn');
+    
+    const newComponent = document.createElement('div');
+    newComponent.innerHTML = createLogoVariant(title, variant1, variant2);
+    
+    // Insert before the add button
+    logosContent.insertBefore(newComponent, addButton);
+    
+    // Re-initialize download buttons for the new component
+    const newDownloadBtns = newComponent.querySelectorAll('.download-btn');
+    newDownloadBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const format = this.textContent.includes('PNG') ? 'PNG' : 'SVG';
+            handleDownload(format);
+        });
+    });
 }
 
 // Show app/social content
