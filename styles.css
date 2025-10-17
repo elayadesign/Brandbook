@@ -18,16 +18,17 @@ body {
     display: flex;
     min-height: 100vh;
     background: #ffffff;
+    position: relative;
 }
 
-/* Sidebar Styles */
+/* Sidebar Styles - Exact Figma Measurements */
 .sidebar {
     width: 260px;
     background: #ffffff;
     border-right: 1px solid #E0E0E0;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 900px;
     position: fixed;
     left: 0;
     top: 0;
@@ -41,17 +42,20 @@ body {
     height: 100%;
 }
 
-/* Logo Section */
+/* Logo Section - Exact Figma Measurements */
 .logo-section {
     padding: 27.013px 6.753px 27.013px 13.506px;
     border-radius: 13.506px;
+    height: 50.649px;
+    display: flex;
+    align-items: center;
 }
 
 .logo {
     display: flex;
     align-items: center;
     gap: 16.883px;
-    height: 50.649px;
+    height: 100%;
 }
 
 .logo-icon {
@@ -69,7 +73,7 @@ body {
     white-space: nowrap;
 }
 
-/* Navigation Menu */
+/* Navigation Menu - Exact Figma Measurements */
 .nav-menu {
     display: flex;
     flex-direction: column;
@@ -121,7 +125,7 @@ body {
     white-space: nowrap;
 }
 
-/* Main Content */
+/* Main Content - Exact Figma Measurements */
 .main-content {
     flex: 1;
     margin-left: 260px;
@@ -143,14 +147,14 @@ body {
     color: #000000;
 }
 
-/* Logo Sections */
+/* Logo Sections - Exact Figma Measurements */
 .logo-sections {
     display: flex;
     gap: 20px;
     width: 800px;
 }
 
-.logo-section {
+.logo-section-item {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -175,7 +179,7 @@ body {
     justify-content: center;
 }
 
-/* Download Buttons */
+/* Download Buttons - Exact Figma Measurements */
 .download-buttons {
     display: flex;
     flex-direction: column;
@@ -246,7 +250,7 @@ body {
         width: 100%;
     }
     
-    .logo-section {
+    .logo-section-item {
         width: 100%;
     }
     

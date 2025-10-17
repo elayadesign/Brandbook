@@ -1,109 +1,68 @@
-# Brand Book - Secure Access Portal
+# Bettermode Brand Book
 
-A responsive, password-protected website for accessing brand guidelines and assets with admin functionality.
+A responsive brand book interface built from Figma design with exact measurements and assets.
 
 ## Features
 
-- 🔐 **Password Protection**: Secure login system with multiple user accounts
-- 👑 **Admin Access**: Special admin dashboard for user management and system settings
-- 📱 **Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
-- 🎨 **Modern UI**: Clean, professional interface with smooth animations
-- 🔒 **Security Features**: Session management, inactivity timeout, and basic security measures
+- 🎨 **Exact Figma Match**: Built with precise measurements from Figma design
+- 📱 **Responsive Design**: Works on desktop, tablet, and mobile devices
+- 🖼️ **Figma Assets**: Uses exact icons and assets from Figma
+- 🎯 **Interactive Navigation**: Clickable sidebar with section switching
+- 📥 **Download Functionality**: Mock download buttons for PNG/SVG files
 
-## Default Login Credentials
+## Design Specifications
 
-### Admin Account
-- **Username**: `admin`
-- **Password**: `admin123`
-- **Access**: Full admin dashboard with user management, analytics, and settings
+### Layout
+- **Sidebar Width**: 260px (exact Figma measurement)
+- **Sidebar Height**: 900px
+- **Logo Section Height**: 50.649px
+- **Main Content**: 800px width with 20px gap between sections
 
-### Regular User Accounts
-- **Username**: `user` | **Password**: `user123`
-- **Username**: `guest` | **Password**: `guest123`
-- **Access**: Standard user access to brand book content
+### Colors
+- **Primary**: #4A4458
+- **Text**: #1D1B20
+- **Secondary**: #49454F
+- **Background**: #FFFFFF
+- **Border**: #E0E0E0
+- **Upload Area**: #EDEDED
 
-## Getting Started
-
-1. **Clone or download** this repository
-2. **Open** `index.html` in your web browser
-3. **Login** using one of the provided credentials
-4. **Explore** the brand book portal
+### Typography
+- **Primary Font**: Inter (600 weight for headings)
+- **Secondary Font**: Roboto (400/500 weight for content)
+- **Logo Text**: 16px Inter Semi-Bold
+- **Navigation**: 12px Inter Medium
+- **Content Headers**: 22px Roboto Regular
 
 ## File Structure
 
 ```
 BrandBook/
-├── index.html          # Main HTML file
-├── styles.css          # CSS styles and responsive design
-├── script.js           # JavaScript functionality and authentication
-└── README.md           # This documentation
+├── index.html          # Main HTML structure
+├── styles.css          # CSS with exact Figma measurements
+├── script.js           # JavaScript functionality
+└── README.md           # Documentation
 ```
 
-## Features Overview
+## Getting Started
 
-### Login System
-- Secure authentication with username/password
-- Error handling for invalid credentials
-- Session persistence using localStorage
-- Loading states and user feedback
+1. **Open** `index.html` in your web browser
+2. **Navigate** using the sidebar menu
+3. **Click** download buttons to test functionality
+4. **Switch** between different brand sections
 
-### Admin Dashboard
-- User management interface
-- Analytics and reporting
-- System settings and configuration
-- Accessible only to admin users
+## Figma Assets
 
-### Responsive Design
-- Mobile-first approach
-- Flexible grid layouts
-- Touch-friendly interface
-- Optimized for all screen sizes
+All icons and assets are loaded directly from Figma's localhost server:
+- Logo: `http://localhost:3845/assets/d83b824f519818cc390db45d4b547dfc3798703c.svg`
+- Navigation Icons: Various localhost URLs from Figma
+- Upload Icons: `http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg`
+- Download Icons: `http://localhost:3845/assets/0469ebeaca45b0fd7425a99e3d743795941664bc.svg`
 
-### Security Features
-- Session timeout after inactivity
-- Basic client-side security measures
-- Console warnings for developers
-- Right-click and F12 protection
+## Responsive Breakpoints
 
-## Customization
-
-### Adding New Users
-Edit the `users` object in `script.js`:
-
-```javascript
-const users = {
-    'newuser': {
-        password: 'newpassword',
-        role: 'user', // or 'admin'
-        name: 'New User Name'
-    }
-};
-```
-
-### Styling
-Modify `styles.css` to match your brand:
-- Update color scheme in CSS variables
-- Change fonts and typography
-- Adjust spacing and layouts
-- Add your brand logo
-
-### Content
-Update `index.html` to include:
-- Your actual brand guidelines
-- Links to real assets and documents
-- Company-specific information
-- Additional features as needed
-
-## Security Considerations
-
-⚠️ **Important**: This is a client-side implementation for demonstration purposes. For production use:
-
-1. **Implement server-side authentication**
-2. **Use HTTPS for all communications**
-3. **Store passwords securely (hashed)**
-4. **Add proper session management**
-5. **Implement CSRF protection**
-6. **Add rate limiting for login attempts**
+- **Desktop**: 1200px and above
+- **Tablet**: 768px - 1199px
+- **Mobile**: Below 768px
 
 ## Browser Support
 
@@ -111,12 +70,8 @@ Update `index.html` to include:
 - Firefox
 - Safari
 - Edge
-- Mobile browsers (iOS Safari, Chrome Mobile)
+- Mobile browsers
 
 ## License
 
 This project is open source and available under the MIT License.
-
-## Support
-
-For questions or support, please contact the development team.
