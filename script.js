@@ -131,7 +131,8 @@ function showLogosContent() {
     if (!logosContent) {
         logosContent = document.createElement('div');
         logosContent.className = 'logos-content';
-        logosContent.innerHTML = createLogoVariant('Main Logo', 'Primary', 'Secondary');
+        // Start with empty content - no initial component
+        logosContent.innerHTML = '';
         mainContent.appendChild(logosContent);
     }
     
@@ -164,7 +165,7 @@ function showAddComponentModal() {
                 <h3>Add New Logo Variant</h3>
                 <div class="form-group">
                     <label for="componentTitle">Component Title:</label>
-                    <input type="text" id="componentTitle" placeholder="e.g., App Icons, Social Media, etc." />
+                    <input type="text" id="componentTitle" placeholder="e.g., Main Logo, App Icons, Social Media" />
                 </div>
                 <div class="form-group">
                     <label for="variant1Name">First Variant Name:</label>
