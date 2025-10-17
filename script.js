@@ -86,7 +86,7 @@ function updateContent(section) {
     
     switch(section) {
         case 'logos':
-            contentHeader.textContent = 'Main Logo';
+            contentHeader.textContent = '';
             showLogosContent();
             break;
         case 'app / social profile':
