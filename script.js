@@ -132,9 +132,13 @@ function showLogosContent() {
         logosContent = document.createElement('div');
         logosContent.className = 'logos-content';
         logosContent.innerHTML = createLogoVariant('Main Logo', 'Primary', 'Secondary');
-        
-        // Add plus button for adding new components
-        const addButton = document.createElement('button');
+        mainContent.appendChild(logosContent);
+    }
+    
+    // Always ensure plus button exists
+    let addButton = logosContent.querySelector('.add-component-btn');
+    if (!addButton) {
+        addButton = document.createElement('button');
         addButton.className = 'add-component-btn';
         addButton.innerHTML = `
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -144,9 +148,7 @@ function showLogosContent() {
             Add Logo Variant
         `;
         addButton.addEventListener('click', showAddComponentModal);
-        
         logosContent.appendChild(addButton);
-        mainContent.appendChild(logosContent);
     }
     
     logosContent.style.display = 'block';
