@@ -78,47 +78,212 @@ function initializeMobileMenu() {
 // Update content based on selected section
 function updateContent(section) {
     const contentHeader = document.querySelector('.content-header h1');
-    const logoSections = document.querySelector('.logo-sections');
+    const mainContent = document.querySelector('.main-content');
+    
+    // Hide all existing content sections
+    const existingSections = mainContent.querySelectorAll('.content-section, .logo-sections, .typography-content, .color-content, .app-social-content, .profile-content, .imagery-content, .marketing-content, .swags-content');
+    existingSections.forEach(section => section.style.display = 'none');
     
     switch(section) {
         case 'logos':
             contentHeader.textContent = 'Main Logo';
-            logoSections.style.display = 'flex';
+            showLogosContent();
             break;
         case 'app / social profile':
             contentHeader.textContent = 'App & Social Profile Assets';
-            logoSections.style.display = 'flex';
+            showAppSocialContent();
             break;
         case 'profile headshots':
             contentHeader.textContent = 'Profile Headshots';
-            logoSections.style.display = 'flex';
+            showProfileContent();
             break;
         case 'typography':
             contentHeader.textContent = 'Typography Guidelines';
-            logoSections.style.display = 'none';
             showTypographyContent();
             break;
         case 'color':
             contentHeader.textContent = 'Color Palette';
-            logoSections.style.display = 'none';
             showColorContent();
             break;
         case 'imagery':
             contentHeader.textContent = 'Imagery Guidelines';
-            logoSections.style.display = 'flex';
+            showImageryContent();
             break;
         case 'marketing assets':
             contentHeader.textContent = 'Marketing Assets';
-            logoSections.style.display = 'flex';
+            showMarketingContent();
             break;
         case 'swags':
             contentHeader.textContent = 'Swag & Merchandise';
-            logoSections.style.display = 'flex';
+            showSwagsContent();
             break;
         default:
             contentHeader.textContent = 'Brand Book';
-            logoSections.style.display = 'flex';
+            showLogosContent();
     }
+}
+
+// Show logos content
+function showLogosContent() {
+    const mainContent = document.querySelector('.main-content');
+    let logosContent = mainContent.querySelector('.logo-sections');
+    
+    if (!logosContent) {
+        logosContent = document.createElement('div');
+        logosContent.className = 'logo-sections';
+        logosContent.innerHTML = `
+            <div class="logo-section-item">
+                <div class="upload-area">
+                    <div class="upload-icon">
+                        <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                    </div>
+                </div>
+                <div class="download-buttons">
+                    <button class="download-btn">
+                        <img src="http://localhost:3845/assets/0469ebeaca45b0fd7425a99e3d743795941664bc.svg" alt="Download" width="20" height="20">
+                        Download PNG
+                    </button>
+                    <button class="download-btn">
+                        <img src="http://localhost:3845/assets/0469ebeaca45b0fd7425a99e3d743795941664bc.svg" alt="Download" width="20" height="20">
+                        Download SVG
+                    </button>
+                </div>
+            </div>
+            <div class="logo-section-item">
+                <div class="upload-area">
+                    <div class="upload-icon">
+                        <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                    </div>
+                </div>
+                <div class="download-buttons">
+                    <button class="download-btn">
+                        <img src="http://localhost:3845/assets/0469ebeaca45b0fd7425a99e3d743795941664bc.svg" alt="Download" width="20" height="20">
+                        Download PNG
+                    </button>
+                    <button class="download-btn">
+                        <img src="http://localhost:3845/assets/0469ebeaca45b0fd7425a99e3d743795941664bc.svg" alt="Download" width="20" height="20">
+                        Download SVG
+                    </button>
+                </div>
+            </div>
+        `;
+        mainContent.appendChild(logosContent);
+    }
+    
+    logosContent.style.display = 'flex';
+}
+
+// Show app/social content
+function showAppSocialContent() {
+    const mainContent = document.querySelector('.main-content');
+    let appSocialContent = mainContent.querySelector('.app-social-content');
+    
+    if (!appSocialContent) {
+        appSocialContent = document.createElement('div');
+        appSocialContent.className = 'app-social-content';
+        appSocialContent.innerHTML = `
+            <div class="content-section">
+                <h2>App Icons</h2>
+                <div class="asset-grid">
+                    <div class="asset-item">
+                        <div class="upload-area">
+                            <div class="upload-icon">
+                                <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                            </div>
+                        </div>
+                        <div class="download-buttons">
+                            <button class="download-btn">Download PNG</button>
+                            <button class="download-btn">Download SVG</button>
+                        </div>
+                    </div>
+                    <div class="asset-item">
+                        <div class="upload-area">
+                            <div class="upload-icon">
+                                <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                            </div>
+                        </div>
+                        <div class="download-buttons">
+                            <button class="download-btn">Download PNG</button>
+                            <button class="download-btn">Download SVG</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-section">
+                <h2>Social Media Assets</h2>
+                <div class="asset-grid">
+                    <div class="asset-item">
+                        <div class="upload-area">
+                            <div class="upload-icon">
+                                <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                            </div>
+                        </div>
+                        <div class="download-buttons">
+                            <button class="download-btn">Download PNG</button>
+                            <button class="download-btn">Download SVG</button>
+                        </div>
+                    </div>
+                    <div class="asset-item">
+                        <div class="upload-area">
+                            <div class="upload-icon">
+                                <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                            </div>
+                        </div>
+                        <div class="download-buttons">
+                            <button class="download-btn">Download PNG</button>
+                            <button class="download-btn">Download SVG</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        mainContent.appendChild(appSocialContent);
+    }
+    
+    appSocialContent.style.display = 'block';
+}
+
+// Show profile content
+function showProfileContent() {
+    const mainContent = document.querySelector('.main-content');
+    let profileContent = mainContent.querySelector('.profile-content');
+    
+    if (!profileContent) {
+        profileContent = document.createElement('div');
+        profileContent.className = 'profile-content';
+        profileContent.innerHTML = `
+            <div class="content-section">
+                <h2>Profile Headshots</h2>
+                <div class="asset-grid">
+                    <div class="asset-item">
+                        <div class="upload-area">
+                            <div class="upload-icon">
+                                <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                            </div>
+                        </div>
+                        <div class="download-buttons">
+                            <button class="download-btn">Download JPG</button>
+                            <button class="download-btn">Download PNG</button>
+                        </div>
+                    </div>
+                    <div class="asset-item">
+                        <div class="upload-area">
+                            <div class="upload-icon">
+                                <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                            </div>
+                        </div>
+                        <div class="download-buttons">
+                            <button class="download-btn">Download JPG</button>
+                            <button class="download-btn">Download PNG</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        mainContent.appendChild(profileContent);
+    }
+    
+    profileContent.style.display = 'block';
 }
 
 // Show typography content

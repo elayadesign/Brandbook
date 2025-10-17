@@ -189,7 +189,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    width: 156px;
+    width: 180px;
 }
 
 .download-btn {
@@ -210,6 +210,14 @@ body {
     line-height: 20px;
     color: #49454F;
     letter-spacing: 0.1px;
+    white-space: nowrap;
+    min-width: 0;
+    flex-shrink: 0;
+}
+
+/* Ensure all buttons are always one line */
+button {
+    white-space: nowrap;
 }
 
 .download-btn:hover {
