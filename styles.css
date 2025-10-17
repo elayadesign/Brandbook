@@ -6,316 +6,267 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', 'Roboto', sans-serif;
     line-height: 1.6;
-    color: #333;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #1D1B20;
+    background: #ffffff;
     min-height: 100vh;
 }
 
-.container {
-    min-height: 100vh;
+/* App Container */
+.app-container {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+    min-height: 100vh;
+    background: #ffffff;
 }
 
-/* Login Styles */
-.login-container {
-    width: 100%;
-    max-width: 400px;
+/* Sidebar Styles */
+.sidebar {
+    width: 260px;
+    background: #ffffff;
+    border-right: 1px solid #E0E0E0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
 }
 
-.login-card {
-    background: white;
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    text-align: center;
+.sidebar-content {
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    height: 100%;
+}
+
+/* Logo Section */
+.logo-section {
+    padding: 27px 6.753px 27px 13.506px;
 }
 
 .logo {
-    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 16.883px;
 }
 
-.logo i {
-    font-size: 3rem;
-    color: #667eea;
-    margin-bottom: 1rem;
+.logo-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
 }
 
-.logo h1 {
-    color: #333;
-    font-size: 2rem;
-    font-weight: 300;
-}
-
-.login-form {
-    text-align: left;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #555;
-    font-weight: 500;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #e1e5e9;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-}
-
-.form-group input:focus {
-    outline: none;
-    border-color: #667eea;
-}
-
-.login-btn {
-    width: 100%;
-    padding: 12px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
+.logo-text h1 {
+    font-family: 'Inter', sans-serif;
     font-weight: 600;
+    font-size: 16px;
+    line-height: 0;
+    color: #000000;
+    white-space: nowrap;
+}
+
+/* Navigation Menu */
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 4px 8px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px;
+    border-radius: 12px;
     cursor: pointer;
-    transition: transform 0.2s ease;
+    transition: background-color 0.2s ease;
 }
 
-.login-btn:hover {
-    transform: translateY(-2px);
+.nav-item:hover {
+    background-color: #f5f5f5;
 }
 
-.error-message {
-    color: #e74c3c;
-    text-align: center;
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    display: none;
-}
-
-/* Main Content Styles */
-.main-content {
-    width: 100%;
-    min-height: 100vh;
-    background: #f8f9fa;
-}
-
-.header {
-    background: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 1rem 0;
-}
-
-.header-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.header .logo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.header .logo i {
-    font-size: 1.5rem;
-    color: #667eea;
-}
-
-.header .logo h1 {
-    font-size: 1.5rem;
-    color: #333;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.logout-btn {
-    background: #e74c3c;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: background-color 0.3s ease;
-}
-
-.logout-btn:hover {
-    background: #c0392b;
-}
-
-.main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-}
-
-/* Admin Panel */
-.admin-panel {
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    margin-bottom: 2rem;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.admin-panel h2 {
-    color: #333;
-    margin-bottom: 1.5rem;
-    font-size: 1.5rem;
-}
-
-.admin-actions {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-}
-
-.admin-btn {
-    background: #667eea;
-    color: white;
-    border: none;
-    padding: 1rem;
+.nav-item.active {
+    background-color: #4A4458;
     border-radius: 8px;
-    cursor: pointer;
+}
+
+.nav-item.active span {
+    color: #ffffff;
+}
+
+.nav-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 8px;
 }
 
-.admin-btn:hover {
-    background: #5a6fd8;
+.nav-item span {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 0;
+    color: #1D1B20;
+    white-space: nowrap;
 }
 
-/* Content Area */
-.content-area h2 {
-    color: #333;
-    margin-bottom: 1rem;
-    font-size: 2rem;
+/* Main Content */
+.main-content {
+    flex: 1;
+    margin-left: 260px;
+    padding: 106px 0 0 190px;
+    background: #ffffff;
+    min-height: 100vh;
 }
 
-.content-area p {
-    color: #666;
-    margin-bottom: 2rem;
-    font-size: 1.1rem;
+.content-header {
+    margin-bottom: 16px;
 }
 
-.feature-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
+.content-header h1 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 28px;
+    color: #000000;
 }
 
-.feature-card {
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+/* Logo Sections */
+.logo-sections {
+    display: flex;
+    gap: 20px;
+    width: 800px;
 }
 
-.feature-card:hover {
-    transform: translateY(-5px);
+.logo-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.feature-card i {
-    font-size: 3rem;
-    color: #667eea;
-    margin-bottom: 1rem;
+.upload-area {
+    background: #EDEDED;
+    border-radius: 8px;
+    height: 168px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
 }
 
-.feature-card h3 {
-    color: #333;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
+.upload-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.feature-card p {
-    color: #666;
-    font-size: 0.9rem;
-    margin: 0;
+/* Download Buttons */
+.download-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 156px;
+}
+
+.download-btn {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: transparent;
+    border: 1px solid #CAC4D0;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #49454F;
+    letter-spacing: 0.1px;
+}
+
+.download-btn:hover {
+    background-color: #f5f5f5;
+}
+
+.download-btn svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
 }
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+    .main-content {
+        padding-left: 20px;
+    }
+    
+    .logo-sections {
+        width: 100%;
+        max-width: 800px;
+    }
+}
+
 @media (max-width: 768px) {
-    .container {
-        padding: 10px;
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
     }
     
-    .login-card {
-        padding: 1.5rem;
+    .sidebar.open {
+        transform: translateX(0);
     }
     
-    .header-content {
-        padding: 0 1rem;
+    .main-content {
+        margin-left: 0;
+        padding-left: 20px;
+        padding-top: 20px;
+    }
+    
+    .logo-sections {
         flex-direction: column;
-        gap: 1rem;
+        width: 100%;
     }
     
-    .main {
-        padding: 1rem;
+    .logo-section {
+        width: 100%;
     }
     
-    .feature-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .admin-actions {
-        grid-template-columns: 1fr;
+    .download-buttons {
+        width: 100%;
     }
 }
 
 @media (max-width: 480px) {
-    .logo h1 {
-        font-size: 1.5rem;
+    .main-content {
+        padding: 20px;
     }
     
-    .content-area h2 {
-        font-size: 1.5rem;
+    .content-header h1 {
+        font-size: 20px;
+        line-height: 24px;
     }
     
-    .feature-card {
-        padding: 1.5rem;
+    .upload-area {
+        height: 120px;
     }
-}
-
-/* Loading Animation */
-.loading {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #667eea;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    
+    .download-btn {
+        height: 44px;
+        font-size: 13px;
+    }
 }

@@ -1,197 +1,323 @@
-// User credentials (in a real app, these would be stored securely on a server)
-const users = {
-    'admin': {
-        password: 'admin123',
-        role: 'admin',
-        name: 'Administrator'
-    },
-    'user': {
-        password: 'user123',
-        role: 'user',
-        name: 'Regular User'
-    },
-    'guest': {
-        password: 'guest123',
-        role: 'user',
-        name: 'Guest User'
-    }
-};
-
-// Current user session
-let currentUser = null;
+// Brand Book Navigation and Functionality
+let currentSection = 'logos';
 
 // DOM Elements
-const loginContainer = document.getElementById('loginContainer');
-const mainContent = document.getElementById('mainContent');
-const loginForm = document.getElementById('loginForm');
-const errorMessage = document.getElementById('errorMessage');
-const welcomeUser = document.getElementById('welcomeUser');
-const logoutBtn = document.getElementById('logoutBtn');
-const adminPanel = document.getElementById('adminPanel');
+const navItems = document.querySelectorAll('.nav-item');
+const downloadBtns = document.querySelectorAll('.download-btn');
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if user is already logged in
-    const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        showMainContent();
-    }
-
-    // Event listeners
-    loginForm.addEventListener('submit', handleLogin);
-    logoutBtn.addEventListener('click', handleLogout);
+    initializeNavigation();
+    initializeDownloadButtons();
+    initializeMobileMenu();
 });
 
-// Handle login form submission
-function handleLogin(e) {
-    e.preventDefault();
+// Initialize navigation functionality
+function initializeNavigation() {
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Remove active class from all items
+            navItems.forEach(nav => nav.classList.remove('active'));
+            
+            // Add active class to clicked item
+            this.classList.add('active');
+            
+            // Get section name from the text content
+            const sectionName = this.querySelector('span').textContent.toLowerCase();
+            currentSection = sectionName;
+            
+            // Update content based on selected section
+            updateContent(sectionName);
+        });
+    });
+}
+
+// Initialize download button functionality
+function initializeDownloadButtons() {
+    downloadBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const format = this.textContent.includes('PNG') ? 'PNG' : 'SVG';
+            handleDownload(format);
+        });
+    });
+}
+
+// Initialize mobile menu functionality
+function initializeMobileMenu() {
+    // Add mobile menu toggle if needed
+    const isMobile = window.innerWidth <= 768;
     
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    
-    // Clear previous error messages
-    hideError();
-    
-    // Validate credentials
-    if (users[username] && users[username].password === password) {
-        currentUser = {
-            username: username,
-            name: users[username].name,
-            role: users[username].role
-        };
+    if (isMobile) {
+        // Add mobile menu toggle button
+        const mobileMenuBtn = document.createElement('button');
+        mobileMenuBtn.className = 'mobile-menu-btn';
+        mobileMenuBtn.innerHTML = '☰';
+        mobileMenuBtn.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: #4A4458;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+        `;
         
-        // Save user session
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        document.body.appendChild(mobileMenuBtn);
         
-        // Show loading state
-        showLoading();
-        
-        // Simulate login delay
-        setTimeout(() => {
-            showMainContent();
-        }, 1000);
-        
-    } else {
-        showError('Invalid username or password. Please try again.');
+        mobileMenuBtn.addEventListener('click', function() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('open');
+        });
     }
 }
 
-// Handle logout
-function handleLogout() {
-    currentUser = null;
-    localStorage.removeItem('currentUser');
-    showLoginForm();
-}
-
-// Show main content after successful login
-function showMainContent() {
-    loginContainer.style.display = 'none';
-    mainContent.style.display = 'block';
+// Update content based on selected section
+function updateContent(section) {
+    const contentHeader = document.querySelector('.content-header h1');
+    const logoSections = document.querySelector('.logo-sections');
     
-    // Update welcome message
-    welcomeUser.textContent = `Welcome, ${currentUser.name}!`;
-    
-    // Show admin panel if user is admin
-    if (currentUser.role === 'admin') {
-        adminPanel.style.display = 'block';
-    } else {
-        adminPanel.style.display = 'none';
+    switch(section) {
+        case 'logos':
+            contentHeader.textContent = 'Main Logo';
+            logoSections.style.display = 'flex';
+            break;
+        case 'app / social profile':
+            contentHeader.textContent = 'App & Social Profile Assets';
+            logoSections.style.display = 'flex';
+            break;
+        case 'profile headshots':
+            contentHeader.textContent = 'Profile Headshots';
+            logoSections.style.display = 'flex';
+            break;
+        case 'typography':
+            contentHeader.textContent = 'Typography Guidelines';
+            logoSections.style.display = 'none';
+            showTypographyContent();
+            break;
+        case 'color':
+            contentHeader.textContent = 'Color Palette';
+            logoSections.style.display = 'none';
+            showColorContent();
+            break;
+        case 'imagery':
+            contentHeader.textContent = 'Imagery Guidelines';
+            logoSections.style.display = 'flex';
+            break;
+        case 'marketing assets':
+            contentHeader.textContent = 'Marketing Assets';
+            logoSections.style.display = 'flex';
+            break;
+        case 'swags':
+            contentHeader.textContent = 'Swag & Merchandise';
+            logoSections.style.display = 'flex';
+            break;
+        default:
+            contentHeader.textContent = 'Brand Book';
+            logoSections.style.display = 'flex';
     }
 }
 
-// Show login form
-function showLoginForm() {
-    loginContainer.style.display = 'block';
-    mainContent.style.display = 'none';
+// Show typography content
+function showTypographyContent() {
+    const mainContent = document.querySelector('.main-content');
+    let typographyContent = mainContent.querySelector('.typography-content');
     
-    // Clear form
-    loginForm.reset();
-    hideError();
-}
-
-// Show error message
-function showError(message) {
-    errorMessage.textContent = message;
-    errorMessage.style.display = 'block';
-}
-
-// Hide error message
-function hideError() {
-    errorMessage.style.display = 'none';
-}
-
-// Show loading state
-function showLoading() {
-    const loginBtn = document.querySelector('.login-btn');
-    const originalText = loginBtn.textContent;
-    loginBtn.innerHTML = '<div class="loading"></div> Logging in...';
-    loginBtn.disabled = true;
+    if (!typographyContent) {
+        typographyContent = document.createElement('div');
+        typographyContent.className = 'typography-content';
+        typographyContent.innerHTML = `
+            <div class="content-section">
+                <h2>Font Families</h2>
+                <div class="font-examples">
+                    <div class="font-example">
+                        <h3>Inter</h3>
+                        <p style="font-family: 'Inter', sans-serif;">The primary font for headings and UI elements</p>
+                    </div>
+                    <div class="font-example">
+                        <h3>Roboto</h3>
+                        <p style="font-family: 'Roboto', sans-serif;">The secondary font for body text and descriptions</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        mainContent.appendChild(typographyContent);
+    }
     
-    // Reset button after delay
+    typographyContent.style.display = 'block';
+}
+
+// Show color content
+function showColorContent() {
+    const mainContent = document.querySelector('.main-content');
+    let colorContent = mainContent.querySelector('.color-content');
+    
+    if (!colorContent) {
+        colorContent = document.createElement('div');
+        colorContent.className = 'color-content';
+        colorContent.innerHTML = `
+            <div class="content-section">
+                <h2>Brand Colors</h2>
+                <div class="color-palette">
+                    <div class="color-item">
+                        <div class="color-swatch" style="background-color: #4A4458;"></div>
+                        <div class="color-info">
+                            <h4>Primary</h4>
+                            <p>#4A4458</p>
+                        </div>
+                    </div>
+                    <div class="color-item">
+                        <div class="color-swatch" style="background-color: #1D1B20;"></div>
+                        <div class="color-info">
+                            <h4>Text</h4>
+                            <p>#1D1B20</p>
+                        </div>
+                    </div>
+                    <div class="color-item">
+                        <div class="color-swatch" style="background-color: #49454F;"></div>
+                        <div class="color-info">
+                            <h4>Secondary</h4>
+                            <p>#49454F</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        mainContent.appendChild(colorContent);
+    }
+    
+    colorContent.style.display = 'block';
+}
+
+// Handle download functionality
+function handleDownload(format) {
+    // In a real application, this would trigger actual file downloads
+    console.log(`Downloading ${format} file for ${currentSection} section`);
+    
+    // Show download notification
+    showNotification(`Downloading ${format} file...`);
+    
+    // Simulate download delay
     setTimeout(() => {
-        loginBtn.textContent = originalText;
-        loginBtn.disabled = false;
+        showNotification(`${format} file downloaded successfully!`);
     }, 1000);
 }
 
-// Admin functions
-function manageUsers() {
-    alert('User Management Panel\n\nThis would typically show:\n- List of all users\n- Add/Edit/Delete users\n- Reset passwords\n- Manage permissions');
-}
-
-function viewAnalytics() {
-    alert('Analytics Dashboard\n\nThis would typically show:\n- Login statistics\n- User activity\n- System usage\n- Performance metrics');
-}
-
-function systemSettings() {
-    alert('System Settings\n\nThis would typically show:\n- Security settings\n- Password policies\n- System configuration\n- Backup settings');
-}
-
-// Security features
-function checkSession() {
-    // Check if session is still valid (in a real app, this would check with server)
-    const savedUser = localStorage.getItem('currentUser');
-    if (!savedUser) {
-        showLoginForm();
-        return false;
+// Show notification
+function showNotification(message) {
+    // Remove existing notification
+    const existingNotification = document.querySelector('.notification');
+    if (existingNotification) {
+        existingNotification.remove();
     }
-    return true;
+    
+    // Create new notification
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #4A4458;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 300);
+    }, 3000);
 }
 
-// Auto-logout after inactivity (optional)
-let inactivityTimer;
-function resetInactivityTimer() {
-    clearTimeout(inactivityTimer);
-    inactivityTimer = setTimeout(() => {
-        if (currentUser) {
-            alert('Session expired due to inactivity. Please log in again.');
-            handleLogout();
-        }
-    }, 30 * 60 * 1000); // 30 minutes
-}
-
-// Reset timer on user activity
-document.addEventListener('mousemove', resetInactivityTimer);
-document.addEventListener('keypress', resetInactivityTimer);
-
-// Initialize inactivity timer
-resetInactivityTimer();
-
-// Prevent right-click and F12 (basic security)
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-});
-
-document.addEventListener('keydown', function(e) {
-    // Disable F12, Ctrl+Shift+I, Ctrl+U
-    if (e.key === 'F12' || 
-        (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-        (e.ctrlKey && e.key === 'u')) {
-        e.preventDefault();
+// Add CSS for animations
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
     }
-});
-
-// Console warning
-console.log('%cStop!', 'color: red; font-size: 50px; font-weight: bold;');
-console.log('%cThis is a browser feature intended for developers. If someone told you to copy-paste something here, it is a scam and will give them access to your account.', 'color: red; font-size: 16px;');
+    
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+    
+    .content-section {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+    
+    .font-examples {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 16px;
+    }
+    
+    .font-example h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+        color: #1D1B20;
+    }
+    
+    .font-example p {
+        font-size: 16px;
+        color: #49454F;
+        line-height: 1.5;
+    }
+    
+    .color-palette {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 16px;
+    }
+    
+    .color-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+        border: 1px solid #E0E0E0;
+        border-radius: 8px;
+    }
+    
+    .color-swatch {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        border: 1px solid #E0E0E0;
+    }
+    
+    .color-info h4 {
+        font-size: 16px;
+        margin-bottom: 4px;
+        color: #1D1B20;
+    }
+    
+    .color-info p {
+        font-size: 14px;
+        color: #49454F;
+        font-family: 'Roboto', monospace;
+    }
+`;
+document.head.appendChild(style);
