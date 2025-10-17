@@ -126,51 +126,16 @@ function updateContent(section) {
 // Show logos content
 function showLogosContent() {
     const mainContent = document.querySelector('.main-content');
-    let logosContent = mainContent.querySelector('.logo-sections');
+    let logosContent = mainContent.querySelector('.logos-content');
     
     if (!logosContent) {
         logosContent = document.createElement('div');
-        logosContent.className = 'logo-sections';
-        logosContent.innerHTML = `
-            <div class="logo-section-item">
-                <div class="upload-area">
-                    <div class="upload-icon">
-                        <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
-                    </div>
-                </div>
-                <div class="download-buttons">
-                    <button class="download-btn">
-                        <img src="http://localhost:3845/assets/0469ebeaca45b0fd7425a99e3d743795941664bc.svg" alt="Download" width="20" height="20">
-                        Download PNG
-                    </button>
-                    <button class="download-btn">
-                        <img src="http://localhost:3845/assets/0469ebeaca45b0fd7425a99e3d743795941664bc.svg" alt="Download" width="20" height="20">
-                        Download SVG
-                    </button>
-                </div>
-            </div>
-            <div class="logo-section-item">
-                <div class="upload-area">
-                    <div class="upload-icon">
-                        <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
-                    </div>
-                </div>
-                <div class="download-buttons">
-                    <button class="download-btn">
-                        <img src="http://localhost:3845/assets/0469ebeaca45b0fd7425a99e3d743795941664bc.svg" alt="Download" width="20" height="20">
-                        Download PNG
-                    </button>
-                    <button class="download-btn">
-                        <img src="http://localhost:3845/assets/0469ebeaca45b0fd7425a99e3d743795941664bc.svg" alt="Download" width="20" height="20">
-                        Download SVG
-                    </button>
-                </div>
-            </div>
-        `;
+        logosContent.className = 'logos-content';
+        logosContent.innerHTML = createLogoVariant('Main Logo', 'Primary', 'Secondary');
         mainContent.appendChild(logosContent);
     }
     
-    logosContent.style.display = 'flex';
+    logosContent.style.display = 'block';
 }
 
 // Show app/social content
@@ -408,6 +373,53 @@ function showNotification(message) {
             }
         }, 300);
     }, 3000);
+}
+
+// Logo Variant Component
+function createLogoVariant(title, variant1Name, variant2Name) {
+    return `
+        <div class="logo-variant-component">
+            <h2 class="variant-title">${title}</h2>
+            <div class="variant-cards">
+                <div class="variant-card">
+                    <div class="upload-area">
+                        <div class="upload-icon">
+                            <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                        </div>
+                    </div>
+                    <div class="download-buttons">
+                        <button class="download-btn">
+                            <img src="http://localhost:3845/assets/0469ebeaca45b0fd7425a99e3d743795941664bc.svg" alt="Download" width="20" height="20">
+                            Download PNG
+                        </button>
+                        <button class="download-btn">
+                            <img src="http://localhost:3845/assets/0469ebeaca45b0fd7425a99e3d743795941664bc.svg" alt="Download" width="20" height="20">
+                            Download SVG
+                        </button>
+                    </div>
+                    <div class="variant-label">${variant1Name}</div>
+                </div>
+                <div class="variant-card">
+                    <div class="upload-area">
+                        <div class="upload-icon">
+                            <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                        </div>
+                    </div>
+                    <div class="download-buttons">
+                        <button class="download-btn">
+                            <img src="http://localhost:3845/assets/0469ebeaca45b0fd7425a99e3d743795941664bc.svg" alt="Download" width="20" height="20">
+                            Download PNG
+                        </button>
+                        <button class="download-btn">
+                            <img src="http://localhost:3845/assets/0469ebeaca45b0fd7425a99e3d743795941664bc.svg" alt="Download" width="20" height="20">
+                            Download SVG
+                        </button>
+                    </div>
+                    <div class="variant-label">${variant2Name}</div>
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 // Add CSS for animations

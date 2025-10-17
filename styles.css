@@ -220,6 +220,47 @@ button {
     white-space: nowrap;
 }
 
+/* Logo Variant Component */
+.logo-variant-component {
+    margin-bottom: 32px;
+}
+
+.variant-title {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 28px;
+    color: #000000;
+    margin-bottom: 16px;
+}
+
+.variant-cards {
+    display: flex;
+    gap: 20px;
+    width: 800px;
+}
+
+.variant-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+}
+
+.variant-label {
+    position: absolute;
+    top: -8px;
+    left: 8px;
+    background: #ffffff;
+    padding: 0 8px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: #49454F;
+    z-index: 1;
+}
+
 .download-btn:hover {
     background-color: #f5f5f5;
 }
