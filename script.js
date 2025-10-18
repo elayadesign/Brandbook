@@ -227,8 +227,10 @@ function addLogoVariantComponent(title, variant1, variant2) {
     const newDownloadBtns = newComponent.querySelectorAll('.download-btn');
     newDownloadBtns.forEach(btn => {
         btn.addEventListener('click', function() {
-            const format = this.textContent.includes('PNG') ? 'PNG' : 'SVG';
-            handleDownload(format);
+            const format = this.textContent.includes('PNG') ? 'png' : 'svg';
+            const variantCard = this.closest('.variant-card');
+            const uploadArea = variantCard.querySelector('.upload-area');
+            handleLogoDownload(format, uploadArea);
         });
     });
     
@@ -667,7 +669,31 @@ function showColorContent() {
     colorContent.style.display = 'block';
 }
 
-// Handle download functionality
+// Handle logo download functionality
+function handleLogoDownload(format, uploadArea) {
+    const images = JSON.parse(uploadArea.dataset.images || '{}');
+    const imageSrc = images[format];
+    
+    if (!imageSrc) {
+        showNotification(`No ${format.toUpperCase()} image available for download. Please upload an image first.`);
+        return;
+    }
+    
+    // Create download link
+    const link = document.createElement('a');
+    link.href = imageSrc;
+    link.download = `logo-${format}.${format}`;
+    
+    // Trigger download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Show success notification
+    showNotification(`${format.toUpperCase()} file downloaded successfully!`);
+}
+
+// Handle download functionality (legacy)
 function handleDownload(format) {
     // In a real application, this would trigger actual file downloads
     console.log(`Downloading ${format} file for ${currentSection} section`);
