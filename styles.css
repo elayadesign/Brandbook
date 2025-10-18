@@ -233,9 +233,52 @@ button {
     white-space: nowrap;
 }
 
+/* Component Headers */
+.component-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.component-header:hover .delete-component-btn {
+    opacity: 1;
+}
+
+/* Delete Component Button */
+.delete-component-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #ff4757;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.delete-component-btn:hover {
+    background: #ff3742;
+    transform: scale(1.1);
+}
+
 /* Logo Variant Component */
 .logo-variant-component {
     margin-bottom: 32px;
+    position: relative;
+}
+
+.logo-variant-component:hover .delete-component-btn {
+    opacity: 1;
 }
 
 .variant-title {
@@ -244,7 +287,20 @@ button {
     font-size: 22px;
     line-height: 28px;
     color: #000000;
-    margin-bottom: 16px;
+    margin: 0;
+    padding: 4px 8px;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    transition: border-color 0.2s ease;
+}
+
+.variant-title:hover {
+    border-color: #E0E0E0;
+}
+
+.variant-title:focus {
+    outline: none;
+    border-color: #4A4458;
 }
 
 .variant-cards {
@@ -266,12 +322,24 @@ button {
     top: -8px;
     left: 8px;
     background: #ffffff;
-    padding: 0 8px;
+    padding: 4px 8px;
     font-family: 'Inter', sans-serif;
     font-weight: 500;
     font-size: 12px;
     color: #49454F;
     z-index: 1;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    transition: border-color 0.2s ease;
+}
+
+.variant-label:hover {
+    border-color: #E0E0E0;
+}
+
+.variant-label:focus {
+    outline: none;
+    border-color: #4A4458;
 }
 
 /* Upload Area Styles */
@@ -564,7 +632,20 @@ button {
     font-weight: 600;
     font-size: 18px;
     color: #1D1B20;
-    margin: 0 0 20px 0;
+    margin: 0;
+    padding: 4px 8px;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    transition: border-color 0.2s ease;
+}
+
+.do-dont-title:hover {
+    border-color: #E0E0E0;
+}
+
+.do-dont-title:focus {
+    outline: none;
+    border-color: #4A4458;
 }
 
 .do-dont-cards {
@@ -647,11 +728,30 @@ button {
     font-size: 14px;
     color: #49454F;
     line-height: 1.4;
+    padding: 4px 8px;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    transition: border-color 0.2s ease;
+    margin-top: 8px;
+}
+
+.do-dont-text:hover {
+    border-color: #E0E0E0;
+}
+
+.do-dont-text:focus {
+    outline: none;
+    border-color: #4A4458;
 }
 
 /* Divider Component */
 .divider-component {
     margin: 20px 0;
+    position: relative;
+}
+
+.divider-component:hover .delete-component-btn {
+    opacity: 1;
 }
 
 .divider-line {
@@ -663,6 +763,11 @@ button {
 /* Heading Components */
 .heading-component {
     margin: 20px 0;
+    position: relative;
+}
+
+.heading-component:hover .delete-component-btn {
+    opacity: 1;
 }
 
 .editable-heading {

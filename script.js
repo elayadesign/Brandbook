@@ -322,6 +322,9 @@ function addLogoVariantComponent(title, variant1, variant2) {
     
     // Initialize upload functionality for the new component
     initializeUploadAreas(newComponent);
+    
+    // Initialize delete functionality
+    initializeDeleteButton(newComponent);
 }
 
 // Initialize upload areas for a component
@@ -904,6 +907,9 @@ function addDoDontComponent(title, doText, dontText) {
     
     // Initialize upload functionality for the new component
     initializeDoDontUploadAreas(newComponent);
+    
+    // Initialize delete functionality
+    initializeDeleteButton(newComponent);
 }
 
 // Add divider
@@ -913,7 +919,19 @@ function addDivider() {
     
     const divider = document.createElement('div');
     divider.className = 'divider-component';
-    divider.innerHTML = '<div class="divider-line"></div>';
+    divider.innerHTML = `
+        <div class="component-header">
+            <div class="divider-line"></div>
+            <button class="delete-component-btn" title="Delete component">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    `;
+    
+    // Add delete functionality
+    initializeDeleteButton(divider);
     
     // Insert before the add button
     logosContent.insertBefore(divider, addButton);
@@ -927,8 +945,18 @@ function addHeading(level) {
     const heading = document.createElement('div');
     heading.className = `heading-component heading-${level}`;
     heading.innerHTML = `
-        <h${level} contenteditable="true" class="editable-heading">Heading ${level}</h${level}>
+        <div class="component-header">
+            <h${level} contenteditable="true" class="editable-heading">Heading ${level}</h${level}>
+            <button class="delete-component-btn" title="Delete component">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
     `;
+    
+    // Add delete functionality
+    initializeDeleteButton(heading);
     
     // Insert before the add button
     logosContent.insertBefore(heading, addButton);
@@ -938,7 +966,14 @@ function addHeading(level) {
 function createLogoVariant(title, variant1Name, variant2Name) {
     return `
         <div class="logo-variant-component">
-            <h2 class="variant-title">${title}</h2>
+            <div class="component-header">
+                <h2 class="variant-title" contenteditable="true">${title}</h2>
+                <button class="delete-component-btn" title="Delete component">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
             <div class="variant-cards">
                 <div class="variant-card">
                     <div class="upload-area" data-variant="1">
@@ -957,7 +992,7 @@ function createLogoVariant(title, variant1Name, variant2Name) {
                             Download SVG
                         </button>
                     </div>
-                    <div class="variant-label">${variant1Name}</div>
+                    <div class="variant-label" contenteditable="true">${variant1Name}</div>
                 </div>
                 <div class="variant-card">
                     <div class="upload-area" data-variant="2">
@@ -976,7 +1011,7 @@ function createLogoVariant(title, variant1Name, variant2Name) {
                             Download SVG
                         </button>
                     </div>
-                    <div class="variant-label">${variant2Name}</div>
+                    <div class="variant-label" contenteditable="true">${variant2Name}</div>
                 </div>
             </div>
         </div>
@@ -987,7 +1022,14 @@ function createLogoVariant(title, variant1Name, variant2Name) {
 function createDoDontComponent(title, doText, dontText) {
     return `
         <div class="do-dont-component">
-            <h2 class="do-dont-title">${title}</h2>
+            <div class="component-header">
+                <h2 class="do-dont-title" contenteditable="true">${title}</h2>
+                <button class="delete-component-btn" title="Delete component">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
             <div class="do-dont-cards">
                 <div class="do-dont-card do-card">
                     <div class="do-dont-upload-area" data-type="do">
@@ -1002,7 +1044,7 @@ function createDoDontComponent(title, doText, dontText) {
                         </svg>
                         Do
                     </div>
-                    <div class="do-dont-text">${doText}</div>
+                    <div class="do-dont-text" contenteditable="true">${doText}</div>
                 </div>
                 <div class="do-dont-card dont-card">
                     <div class="do-dont-upload-area" data-type="dont">
@@ -1017,7 +1059,7 @@ function createDoDontComponent(title, doText, dontText) {
                         </svg>
                         Don't
                     </div>
-                    <div class="do-dont-text">${dontText}</div>
+                    <div class="do-dont-text" contenteditable="true">${dontText}</div>
                 </div>
             </div>
         </div>
@@ -1168,6 +1210,19 @@ function displayDoDontUploadedImage(imageSrc, uploadArea) {
         uploadIcon.style.display = 'none';
         uploadedImage.style.opacity = '1';
     });
+}
+
+// Initialize delete button functionality
+function initializeDeleteButton(component) {
+    const deleteBtn = component.querySelector('.delete-component-btn');
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (confirm('Are you sure you want to delete this component?')) {
+                component.remove();
+            }
+        });
+    }
 }
 
 // Add CSS for animations
