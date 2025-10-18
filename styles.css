@@ -367,9 +367,10 @@ button {
 }
 
 .uploaded-image img {
-    max-width: 100%;
+    max-width: calc(100% - 64px); /* 32px padding on each side */
     max-height: 100%;
     object-fit: contain;
+    margin: 0 32px; /* 32px padding left and right */
 }
 
 /* Add Component Dropdown */
@@ -697,9 +698,10 @@ button {
 }
 
 .do-dont-upload-area .uploaded-image img {
-    max-width: 100%;
+    max-width: calc(100% - 64px); /* 32px padding on each side */
     max-height: 100%;
     object-fit: contain;
+    margin: 0 32px; /* 32px padding left and right */
 }
 
 .do-dont-button {
