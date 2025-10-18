@@ -426,12 +426,14 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 60px;
-    height: 60px;
+    gap: 8px;
+    width: auto;
+    height: 30px;
+    padding: 0 16px;
     background: transparent;
     color: #2196F3;
     border: 2px solid #2196F3;
-    border-radius: 50%;
+    border-radius: 15px;
     cursor: pointer;
     font-family: 'Inter', sans-serif;
     font-weight: 500;
@@ -448,8 +450,8 @@ button {
 }
 
 .add-component-btn svg {
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 16px;
     z-index: 1;
     position: relative;
     stroke: #2196F3;
