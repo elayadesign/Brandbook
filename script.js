@@ -10,12 +10,12 @@ const navItems = document.querySelectorAll('.nav-item');
 const downloadBtns = document.querySelectorAll('.download-btn');
 
 // Initialize the app
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     initializeNavigation();
     initializeDownloadButtons();
     initializeMobileMenu();
-    // Load saved data
-    loadSavedData();
+    // Load saved data and wait for it to complete
+    await loadSavedData();
     // Show initial content (Logos page)
     showLogosContent();
 });
@@ -1316,27 +1316,36 @@ async function saveData() {
 
 // Load data from Firebase
 async function loadSavedData() {
+    console.log('Starting to load data...');
+    console.log('Firebase available:', !!(window.firebaseDB && window.firebaseDoc && window.firebaseGetDoc));
+    
     try {
         // Try Firebase first
         if (window.firebaseDB && window.firebaseDoc && window.firebaseGetDoc) {
+            console.log('Attempting to load from Firebase...');
             const docRef = window.firebaseDoc(window.firebaseDB, 'brandbook', 'data');
             const docSnap = await window.firebaseGetDoc(docRef);
             
             if (docSnap.exists()) {
                 savedData = docSnap.data();
-                console.log('Data loaded from Firebase successfully');
+                console.log('Data loaded from Firebase successfully:', savedData);
                 showSaveStatus('Loaded from cloud', 'success');
                 return;
+            } else {
+                console.log('No data found in Firebase');
             }
+        } else {
+            console.log('Firebase not available, using localStorage');
         }
         
         // Fallback to localStorage
         const stored = localStorage.getItem('brandbook_data');
         if (stored) {
             savedData = JSON.parse(stored);
-            console.log('Data loaded from localStorage');
+            console.log('Data loaded from localStorage:', savedData);
             showSaveStatus('Loaded locally', 'info');
         } else {
+            console.log('No data found in localStorage');
             savedData = { components: [], lastSaved: null };
         }
     } catch (error) {
@@ -1346,11 +1355,14 @@ async function loadSavedData() {
             const stored = localStorage.getItem('brandbook_data');
             if (stored) {
                 savedData = JSON.parse(stored);
+                console.log('Fallback: Data loaded from localStorage:', savedData);
                 showSaveStatus('Loaded locally (cloud failed)', 'warning');
             } else {
                 savedData = { components: [], lastSaved: null };
+                console.log('No data found anywhere');
             }
         } catch (localError) {
+            console.error('LocalStorage error:', localError);
             savedData = { components: [], lastSaved: null };
             showSaveStatus('Load failed', 'error');
         }
