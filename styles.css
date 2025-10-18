@@ -134,10 +134,13 @@ body {
 .main-content {
     flex: 1;
     margin-left: 260px;
-    padding: 106px 0 0 190px;
+    padding: 106px 0 0 0;
     background: #ffffff;
     min-height: 100vh;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .content-header {
@@ -150,6 +153,16 @@ body {
     font-size: 22px;
     line-height: 28px;
     color: #000000;
+}
+
+/* Logos Content Container */
+.logos-content {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
 }
 
 /* Logo Sections - Exact Figma Measurements */
