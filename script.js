@@ -1,5 +1,9 @@
 // Brand Book Navigation and Functionality
 let currentSection = 'logos';
+let savedData = {
+    components: [],
+    lastSaved: null
+};
 
 // DOM Elements
 const navItems = document.querySelectorAll('.nav-item');
@@ -10,6 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeNavigation();
     initializeDownloadButtons();
     initializeMobileMenu();
+    // Load saved data
+    loadSavedData();
     // Show initial content (Logos page)
     showLogosContent();
 });
@@ -149,6 +155,12 @@ function showLogosContent() {
     `;
     addButton.addEventListener('click', showAddComponentDropdown);
     logosContent.appendChild(addButton);
+    
+    // Restore saved components
+    restoreComponents();
+    
+    // Set up auto-save
+    setupAutoSave();
     
     logosContent.style.display = 'block';
 }
@@ -325,6 +337,9 @@ function addLogoVariantComponent(title, variant1, variant2) {
     
     // Initialize delete functionality
     initializeDeleteButton(newComponent);
+    
+    // Save data
+    saveData();
 }
 
 // Initialize upload areas for a component
@@ -910,6 +925,9 @@ function addDoDontComponent(title, doText, dontText) {
     
     // Initialize delete functionality
     initializeDeleteButton(newComponent);
+    
+    // Save data
+    saveData();
 }
 
 // Add divider
@@ -935,6 +953,9 @@ function addDivider() {
     
     // Insert before the add button
     logosContent.insertBefore(divider, addButton);
+    
+    // Save data
+    saveData();
 }
 
 // Add heading
@@ -960,6 +981,9 @@ function addHeading(level) {
     
     // Insert before the add button
     logosContent.insertBefore(heading, addButton);
+    
+    // Save data
+    saveData();
 }
 
 // Logo Variant Component
@@ -1220,9 +1244,187 @@ function initializeDeleteButton(component) {
             e.stopPropagation();
             if (confirm('Are you sure you want to delete this component?')) {
                 component.remove();
+                saveData(); // Save after deletion
             }
         });
     }
+}
+
+// Save data to localStorage
+function saveData() {
+    const logosContent = document.querySelector('.logos-content');
+    if (!logosContent) return;
+    
+    const components = [];
+    const componentElements = logosContent.querySelectorAll('.logo-variant-component, .do-dont-component, .divider-component, .heading-component');
+    
+    componentElements.forEach((element, index) => {
+        const componentData = {
+            id: `component_${Date.now()}_${index}`,
+            type: element.className.split(' ')[0], // Get the first class name
+            html: element.outerHTML,
+            timestamp: Date.now()
+        };
+        
+        // Extract specific data based on component type
+        if (element.classList.contains('logo-variant-component')) {
+            const title = element.querySelector('.variant-title').textContent;
+            const variant1Label = element.querySelector('.variant-card:first-child .variant-label').textContent;
+            const variant2Label = element.querySelector('.variant-card:last-child .variant-label').textContent;
+            componentData.data = { title, variant1Label, variant2Label };
+        } else if (element.classList.contains('do-dont-component')) {
+            const title = element.querySelector('.do-dont-title').textContent;
+            const doText = element.querySelector('.do-card .do-dont-text').textContent;
+            const dontText = element.querySelector('.dont-card .do-dont-text').textContent;
+            componentData.data = { title, doText, dontText };
+        } else if (element.classList.contains('heading-component')) {
+            const headingText = element.querySelector('.editable-heading').textContent;
+            const headingLevel = element.querySelector('.editable-heading').tagName.toLowerCase();
+            componentData.data = { headingText, headingLevel };
+        }
+        
+        components.push(componentData);
+    });
+    
+    savedData.components = components;
+    savedData.lastSaved = Date.now();
+    
+    try {
+        localStorage.setItem('brandbook_data', JSON.stringify(savedData));
+        console.log('Data saved successfully');
+        showSaveStatus('Saved', 'success');
+    } catch (error) {
+        console.error('Error saving data:', error);
+        showSaveStatus('Save failed', 'error');
+    }
+}
+
+// Load data from localStorage
+function loadSavedData() {
+    try {
+        const stored = localStorage.getItem('brandbook_data');
+        if (stored) {
+            savedData = JSON.parse(stored);
+            console.log('Data loaded successfully');
+        }
+    } catch (error) {
+        console.error('Error loading data:', error);
+        savedData = { components: [], lastSaved: null };
+    }
+}
+
+// Restore components from saved data
+function restoreComponents() {
+    const logosContent = document.querySelector('.logos-content');
+    if (!logosContent || !savedData.components.length) return;
+    
+    // Clear existing components (but keep the add button)
+    const addButton = logosContent.querySelector('.add-component-btn');
+    logosContent.innerHTML = '';
+    if (addButton) {
+        logosContent.appendChild(addButton);
+    }
+    
+    // Restore each component
+    savedData.components.forEach(componentData => {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = componentData.html;
+        const component = tempDiv.firstElementChild;
+        
+        // Insert before the add button
+        logosContent.insertBefore(component, addButton);
+        
+        // Re-initialize functionality based on component type
+        if (component.classList.contains('logo-variant-component')) {
+            initializeUploadAreas(component);
+            initializeDeleteButton(component);
+            // Re-initialize download buttons
+            const downloadBtns = component.querySelectorAll('.download-btn');
+            downloadBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const format = this.textContent.includes('PNG') ? 'png' : 'svg';
+                    const variantCard = this.closest('.variant-card');
+                    const uploadArea = variantCard.querySelector('.upload-area');
+                    handleLogoDownload(format, uploadArea);
+                });
+            });
+        } else if (component.classList.contains('do-dont-component')) {
+            initializeDoDontUploadAreas(component);
+            initializeDeleteButton(component);
+        } else if (component.classList.contains('divider-component') || component.classList.contains('heading-component')) {
+            initializeDeleteButton(component);
+        }
+    });
+}
+
+// Auto-save functionality
+function setupAutoSave() {
+    // Save on any content change
+    document.addEventListener('input', function(e) {
+        if (e.target.contentEditable === 'true' || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+            clearTimeout(window.autoSaveTimeout);
+            window.autoSaveTimeout = setTimeout(saveData, 1000); // Save after 1 second of inactivity
+        }
+    });
+    
+    // Save on component addition/deletion
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'childList') {
+                const logosContent = document.querySelector('.logos-content');
+                if (logosContent && mutation.target.contains(logosContent)) {
+                    clearTimeout(window.autoSaveTimeout);
+                    window.autoSaveTimeout = setTimeout(saveData, 500);
+                }
+            }
+        });
+    });
+    
+    const logosContent = document.querySelector('.logos-content');
+    if (logosContent) {
+        observer.observe(logosContent, { childList: true, subtree: true });
+    }
+}
+
+// Show save status
+function showSaveStatus(message, type) {
+    // Remove existing status
+    const existingStatus = document.querySelector('.save-status');
+    if (existingStatus) {
+        existingStatus.remove();
+    }
+    
+    // Create status indicator
+    const status = document.createElement('div');
+    status.className = `save-status save-${type}`;
+    status.textContent = message;
+    status.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-family: 'Inter', sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        z-index: 1000;
+        transition: all 0.3s ease;
+        ${type === 'success' ? 'background: #4CAF50; color: white;' : 'background: #f44336; color: white;'}
+    `;
+    
+    document.body.appendChild(status);
+    
+    // Remove after 2 seconds
+    setTimeout(() => {
+        if (status.parentNode) {
+            status.style.opacity = '0';
+            setTimeout(() => {
+                if (status.parentNode) {
+                    status.remove();
+                }
+            }, 300);
+        }
+    }, 2000);
 }
 
 // Add CSS for animations
