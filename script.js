@@ -231,6 +231,152 @@ function addLogoVariantComponent(title, variant1, variant2) {
             handleDownload(format);
         });
     });
+    
+    // Initialize upload functionality for the new component
+    initializeUploadAreas(newComponent);
+}
+
+// Initialize upload areas for a component
+function initializeUploadAreas(component) {
+    const uploadAreas = component.querySelectorAll('.upload-area');
+    
+    uploadAreas.forEach(area => {
+        area.addEventListener('click', function() {
+            const variant = this.getAttribute('data-variant');
+            showUploadModal(variant, this);
+        });
+    });
+}
+
+// Show upload modal
+function showUploadModal(variant, uploadArea) {
+    const modal = document.createElement('div');
+    modal.className = 'upload-modal';
+    modal.innerHTML = `
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <h3>Upload Image - Variant ${variant}</h3>
+                <div class="upload-options">
+                    <div class="upload-option">
+                        <label for="fileInput" class="upload-file-btn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
+                                <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
+                                <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2"/>
+                                <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2"/>
+                                <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                            Upload from Computer
+                        </label>
+                        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                    </div>
+                    <div class="upload-divider">
+                        <span>OR</span>
+                    </div>
+                    <div class="upload-option">
+                        <label for="urlInput">Paste Image URL:</label>
+                        <input type="url" id="urlInput" placeholder="https://example.com/image.png">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-cancel">Cancel</button>
+                    <button class="btn-upload" disabled>Upload</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    const fileInput = modal.querySelector('#fileInput');
+    const urlInput = modal.querySelector('#urlInput');
+    const uploadBtn = modal.querySelector('.btn-upload');
+    const cancelBtn = modal.querySelector('.btn-cancel');
+    
+    // File input change handler
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            urlInput.value = '';
+            uploadBtn.disabled = false;
+        }
+    });
+    
+    // URL input change handler
+    urlInput.addEventListener('input', function() {
+        if (this.value.trim()) {
+            fileInput.value = '';
+            uploadBtn.disabled = false;
+        } else {
+            uploadBtn.disabled = true;
+        }
+    });
+    
+    // Upload button handler
+    uploadBtn.addEventListener('click', function() {
+        if (fileInput.files[0]) {
+            handleFileUpload(fileInput.files[0], uploadArea);
+        } else if (urlInput.value.trim()) {
+            handleUrlUpload(urlInput.value.trim(), uploadArea);
+        }
+        document.body.removeChild(modal);
+    });
+    
+    // Cancel button handler
+    cancelBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+    });
+    
+    // Close on overlay click
+    modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
+        if (e.target === modal.querySelector('.modal-overlay')) {
+            document.body.removeChild(modal);
+        }
+    });
+}
+
+// Handle file upload
+function handleFileUpload(file, uploadArea) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        displayUploadedImage(e.target.result, uploadArea);
+    };
+    reader.readAsDataURL(file);
+}
+
+// Handle URL upload
+function handleUrlUpload(url, uploadArea) {
+    // Create a new image to test if URL is valid
+    const img = new Image();
+    img.onload = function() {
+        displayUploadedImage(url, uploadArea);
+    };
+    img.onerror = function() {
+        alert('Invalid image URL. Please check the link and try again.');
+    };
+    img.src = url;
+}
+
+// Display uploaded image
+function displayUploadedImage(imageSrc, uploadArea) {
+    const uploadIcon = uploadArea.querySelector('.upload-icon');
+    const uploadedImage = uploadArea.querySelector('.uploaded-image');
+    
+    // Hide upload icon and show uploaded image
+    uploadIcon.style.display = 'none';
+    uploadedImage.style.display = 'block';
+    uploadedImage.innerHTML = `<img src="${imageSrc}" alt="Uploaded logo" style="width: 100%; height: 100%; object-fit: contain;">`;
+    
+    // Add hover effect to show upload icon again
+    uploadArea.addEventListener('mouseenter', function() {
+        uploadIcon.style.display = 'flex';
+        uploadedImage.style.opacity = '0.7';
+    });
+    
+    uploadArea.addEventListener('mouseleave', function() {
+        uploadIcon.style.display = 'none';
+        uploadedImage.style.opacity = '1';
+    });
 }
 
 // Show app/social content
@@ -477,10 +623,11 @@ function createLogoVariant(title, variant1Name, variant2Name) {
             <h2 class="variant-title">${title}</h2>
             <div class="variant-cards">
                 <div class="variant-card">
-                    <div class="upload-area">
+                    <div class="upload-area" data-variant="1">
                         <div class="upload-icon">
                             <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
                         </div>
+                        <div class="uploaded-image" style="display: none;"></div>
                     </div>
                     <div class="download-buttons">
                         <button class="download-btn">
@@ -495,10 +642,11 @@ function createLogoVariant(title, variant1Name, variant2Name) {
                     <div class="variant-label">${variant1Name}</div>
                 </div>
                 <div class="variant-card">
-                    <div class="upload-area">
+                    <div class="upload-area" data-variant="2">
                         <div class="upload-icon">
                             <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
                         </div>
+                        <div class="uploaded-image" style="display: none;"></div>
                     </div>
                     <div class="download-buttons">
                         <button class="download-btn">
