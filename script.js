@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeNavigation();
     initializeDownloadButtons();
     initializeMobileMenu();
+    // Show initial content (Logos page)
+    showLogosContent();
 });
 
 // Initialize navigation functionality
