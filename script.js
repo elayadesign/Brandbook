@@ -147,10 +147,96 @@ function showLogosContent() {
             <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
     `;
-    addButton.addEventListener('click', showAddComponentModal);
+    addButton.addEventListener('click', showAddComponentDropdown);
     logosContent.appendChild(addButton);
     
     logosContent.style.display = 'block';
+}
+
+// Show dropdown for adding new components
+function showAddComponentDropdown() {
+    const dropdown = document.createElement('div');
+    dropdown.className = 'add-component-dropdown';
+    dropdown.innerHTML = `
+        <div class="dropdown-overlay"></div>
+        <div class="dropdown-content">
+            <div class="dropdown-item" data-type="logo-variant">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="2"/>
+                    <path d="M6 6h4v4H6V6z" fill="currentColor"/>
+                </svg>
+                Logo Variant
+            </div>
+            <div class="dropdown-item" data-type="do-dont">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                    <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M15 9l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Do and Don't
+            </div>
+            <div class="dropdown-item" data-type="divider">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Divider
+            </div>
+            <div class="dropdown-item" data-type="heading1">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Heading 1
+            </div>
+            <div class="dropdown-item" data-type="heading2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 6h18M3 12h12M3 18h8" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Heading 2
+            </div>
+            <div class="dropdown-item" data-type="heading3">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 6h18M3 12h8M3 18h6" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Heading 3
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(dropdown);
+    
+    // Handle dropdown item clicks
+    dropdown.querySelectorAll('.dropdown-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const type = this.getAttribute('data-type');
+            document.body.removeChild(dropdown);
+            
+            switch(type) {
+                case 'logo-variant':
+                    showAddComponentModal();
+                    break;
+                case 'do-dont':
+                    showAddDoDontModal();
+                    break;
+                case 'divider':
+                    addDivider();
+                    break;
+                case 'heading1':
+                    addHeading(1);
+                    break;
+                case 'heading2':
+                    addHeading(2);
+                    break;
+                case 'heading3':
+                    addHeading(3);
+                    break;
+            }
+        });
+    });
+    
+    // Close dropdown on overlay click
+    dropdown.querySelector('.dropdown-overlay').addEventListener('click', () => {
+        document.body.removeChild(dropdown);
+    });
 }
 
 // Show modal for adding new component
@@ -746,6 +832,108 @@ function showNotification(message) {
     }, 3000);
 }
 
+// Show modal for adding Do and Don't component
+function showAddDoDontModal() {
+    const modal = document.createElement('div');
+    modal.className = 'add-component-modal';
+    modal.innerHTML = `
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <h3>Add Do and Don't Component</h3>
+                <div class="form-group">
+                    <label for="doDontTitle">Component Title:</label>
+                    <input type="text" id="doDontTitle" placeholder="e.g., Color Usage, Typography Rules, etc." />
+                </div>
+                <div class="form-group">
+                    <label for="doText">Do Description:</label>
+                    <input type="text" id="doText" placeholder="e.g., Which pairings are accessible?" />
+                </div>
+                <div class="form-group">
+                    <label for="dontText">Don't Description:</label>
+                    <input type="text" id="dontText" placeholder="e.g., What should be avoided?" />
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-cancel">Cancel</button>
+                    <button class="btn-add">Add Component</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Focus on first input
+    modal.querySelector('#doDontTitle').focus();
+    
+    // Event listeners
+    modal.querySelector('.btn-cancel').addEventListener('click', () => {
+        document.body.removeChild(modal);
+    });
+    
+    modal.querySelector('.btn-add').addEventListener('click', () => {
+        const title = modal.querySelector('#doDontTitle').value.trim();
+        const doText = modal.querySelector('#doText').value.trim();
+        const dontText = modal.querySelector('#dontText').value.trim();
+        
+        if (title && doText && dontText) {
+            addDoDontComponent(title, doText, dontText);
+            document.body.removeChild(modal);
+        } else {
+            alert('Please fill in all fields');
+        }
+    });
+    
+    // Close on overlay click
+    modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
+        if (e.target === modal.querySelector('.modal-overlay')) {
+            document.body.removeChild(modal);
+        }
+    });
+}
+
+// Add Do and Don't component
+function addDoDontComponent(title, doText, dontText) {
+    const logosContent = document.querySelector('.logos-content');
+    const addButton = logosContent.querySelector('.add-component-btn');
+    
+    const newComponent = document.createElement('div');
+    newComponent.innerHTML = createDoDontComponent(title, doText, dontText);
+    
+    // Insert before the add button
+    logosContent.insertBefore(newComponent, addButton);
+    
+    // Initialize upload functionality for the new component
+    initializeDoDontUploadAreas(newComponent);
+}
+
+// Add divider
+function addDivider() {
+    const logosContent = document.querySelector('.logos-content');
+    const addButton = logosContent.querySelector('.add-component-btn');
+    
+    const divider = document.createElement('div');
+    divider.className = 'divider-component';
+    divider.innerHTML = '<div class="divider-line"></div>';
+    
+    // Insert before the add button
+    logosContent.insertBefore(divider, addButton);
+}
+
+// Add heading
+function addHeading(level) {
+    const logosContent = document.querySelector('.logos-content');
+    const addButton = logosContent.querySelector('.add-component-btn');
+    
+    const heading = document.createElement('div');
+    heading.className = `heading-component heading-${level}`;
+    heading.innerHTML = `
+        <h${level} contenteditable="true" class="editable-heading">Heading ${level}</h${level}>
+    `;
+    
+    // Insert before the add button
+    logosContent.insertBefore(heading, addButton);
+}
+
 // Logo Variant Component
 function createLogoVariant(title, variant1Name, variant2Name) {
     return `
@@ -793,6 +981,193 @@ function createLogoVariant(title, variant1Name, variant2Name) {
             </div>
         </div>
     `;
+}
+
+// Do and Don't Component
+function createDoDontComponent(title, doText, dontText) {
+    return `
+        <div class="do-dont-component">
+            <h2 class="do-dont-title">${title}</h2>
+            <div class="do-dont-cards">
+                <div class="do-dont-card do-card">
+                    <div class="do-dont-upload-area" data-type="do">
+                        <div class="upload-icon">
+                            <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                        </div>
+                        <div class="uploaded-image" style="display: none;"></div>
+                    </div>
+                    <div class="do-dont-button do-button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Do
+                    </div>
+                    <div class="do-dont-text">${doText}</div>
+                </div>
+                <div class="do-dont-card dont-card">
+                    <div class="do-dont-upload-area" data-type="dont">
+                        <div class="upload-icon">
+                            <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                        </div>
+                        <div class="uploaded-image" style="display: none;"></div>
+                    </div>
+                    <div class="do-dont-button dont-button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Don't
+                    </div>
+                    <div class="do-dont-text">${dontText}</div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Initialize Do and Don't upload areas
+function initializeDoDontUploadAreas(component) {
+    const uploadAreas = component.querySelectorAll('.do-dont-upload-area');
+    
+    uploadAreas.forEach(area => {
+        area.addEventListener('click', function() {
+            const type = this.getAttribute('data-type');
+            showDoDontUploadModal(type, this);
+        });
+    });
+}
+
+// Show Do and Don't upload modal
+function showDoDontUploadModal(type, uploadArea) {
+    const modal = document.createElement('div');
+    modal.className = 'upload-modal';
+    modal.innerHTML = `
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <h3>Upload Image - ${type.charAt(0).toUpperCase() + type.slice(1)}</h3>
+                <div class="upload-options">
+                    <div class="upload-option">
+                        <label for="doDontFileInput" class="upload-file-btn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
+                                <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
+                                <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2"/>
+                                <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2"/>
+                                <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                            Upload from Computer
+                        </label>
+                        <input type="file" id="doDontFileInput" accept="image/*" style="display: none;">
+                    </div>
+                    <div class="upload-divider">
+                        <span>OR</span>
+                    </div>
+                    <div class="upload-option">
+                        <label for="doDontUrlInput">Paste Image URL:</label>
+                        <input type="url" id="doDontUrlInput" placeholder="https://example.com/image.png">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-cancel">Cancel</button>
+                    <button class="btn-upload" disabled>Upload Image</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    const fileInput = modal.querySelector('#doDontFileInput');
+    const urlInput = modal.querySelector('#doDontUrlInput');
+    const uploadBtn = modal.querySelector('.btn-upload');
+    const cancelBtn = modal.querySelector('.btn-cancel');
+    
+    // Check if any input has content
+    function checkUploadButton() {
+        const hasFile = fileInput.files.length > 0;
+        const hasUrl = urlInput.value.trim() !== '';
+        uploadBtn.disabled = !(hasFile || hasUrl);
+    }
+    
+    // File input change handler
+    fileInput.addEventListener('change', function(e) {
+        if (e.target.files[0]) {
+            urlInput.value = '';
+        }
+        checkUploadButton();
+    });
+    
+    // URL input change handler
+    urlInput.addEventListener('input', function() {
+        if (this.value.trim()) {
+            fileInput.value = '';
+        }
+        checkUploadButton();
+    });
+    
+    // Upload button handler
+    uploadBtn.addEventListener('click', function() {
+        if (fileInput.files[0]) {
+            handleDoDontFileUpload(fileInput.files[0], uploadArea);
+        } else if (urlInput.value.trim()) {
+            handleDoDontUrlUpload(urlInput.value.trim(), uploadArea);
+        }
+        document.body.removeChild(modal);
+    });
+    
+    // Cancel button handler
+    cancelBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+    });
+    
+    // Close on overlay click
+    modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
+        if (e.target === modal.querySelector('.modal-overlay')) {
+            document.body.removeChild(modal);
+        }
+    });
+}
+
+// Handle Do and Don't file upload
+function handleDoDontFileUpload(file, uploadArea) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        displayDoDontUploadedImage(e.target.result, uploadArea);
+    };
+    reader.readAsDataURL(file);
+}
+
+// Handle Do and Don't URL upload
+function handleDoDontUrlUpload(url, uploadArea) {
+    const img = new Image();
+    img.onload = function() {
+        displayDoDontUploadedImage(url, uploadArea);
+    };
+    img.onerror = function() {
+        alert('Invalid image URL. Please check the link and try again.');
+    };
+    img.src = url;
+}
+
+// Display Do and Don't uploaded image
+function displayDoDontUploadedImage(imageSrc, uploadArea) {
+    const uploadIcon = uploadArea.querySelector('.upload-icon');
+    const uploadedImage = uploadArea.querySelector('.uploaded-image');
+    
+    // Hide upload icon and show uploaded image
+    uploadIcon.style.display = 'none';
+    uploadedImage.style.display = 'block';
+    uploadedImage.innerHTML = `<img src="${imageSrc}" alt="Uploaded image" style="width: 100%; height: 100%; object-fit: contain;">`;
+    
+    // Add hover effect to show upload icon again
+    uploadArea.addEventListener('mouseenter', function() {
+        uploadIcon.style.display = 'flex';
+        uploadedImage.style.opacity = '0.7';
+    });
+    
+    uploadArea.addEventListener('mouseleave', function() {
+        uploadIcon.style.display = 'none';
+        uploadedImage.style.opacity = '1';
+    });
 }
 
 // Add CSS for animations
