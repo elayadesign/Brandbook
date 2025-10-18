@@ -143,11 +143,9 @@ function showLogosContent() {
     const addButton = document.createElement('button');
     addButton.className = 'add-component-btn';
     addButton.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
-            <path d="M10 6v8M6 10h8" stroke="currentColor" stroke-width="2"/>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
-        Add Logo Variant
     `;
     addButton.addEventListener('click', showAddComponentModal);
     logosContent.appendChild(addButton);
