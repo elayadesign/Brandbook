@@ -1271,12 +1271,41 @@ async function saveData() {
             const title = element.querySelector('.variant-title').textContent;
             const variant1Label = element.querySelector('.variant-card:first-child .variant-label').textContent;
             const variant2Label = element.querySelector('.variant-card:last-child .variant-label').textContent;
-            componentData.data = { title, variant1Label, variant2Label };
+            
+            // Extract image data from upload areas
+            const uploadAreas = element.querySelectorAll('.upload-area');
+            const imageData = {};
+            uploadAreas.forEach((area, index) => {
+                if (area.dataset.images) {
+                    try {
+                        imageData[`variant${index + 1}`] = JSON.parse(area.dataset.images);
+                    } catch (error) {
+                        console.error('Error parsing image data:', error);
+                    }
+                }
+            });
+            
+            componentData.data = { title, variant1Label, variant2Label, imageData };
         } else if (element.classList.contains('do-dont-component')) {
             const title = element.querySelector('.do-dont-title').textContent;
             const doText = element.querySelector('.do-card .do-dont-text').textContent;
             const dontText = element.querySelector('.dont-card .do-dont-text').textContent;
-            componentData.data = { title, doText, dontText };
+            
+            // Extract image data from upload areas
+            const uploadAreas = element.querySelectorAll('.do-dont-upload-area');
+            const imageData = {};
+            uploadAreas.forEach((area, index) => {
+                if (area.dataset.images) {
+                    try {
+                        const type = area.dataset.type || `area${index}`;
+                        imageData[type] = JSON.parse(area.dataset.images);
+                    } catch (error) {
+                        console.error('Error parsing image data:', error);
+                    }
+                }
+            });
+            
+            componentData.data = { title, doText, dontText, imageData };
         } else if (element.classList.contains('heading-component')) {
             const headingText = element.querySelector('.editable-heading').textContent;
             const headingLevel = element.querySelector('.editable-heading').tagName.toLowerCase();
@@ -1369,6 +1398,37 @@ async function loadSavedData() {
     }
 }
 
+// Restore uploaded images in components
+function restoreComponentImages(component, componentIndex) {
+    // Get the component data by index
+    const componentData = savedData.components[componentIndex];
+    
+    if (!componentData || !componentData.data.imageData) return;
+    
+    // Find all upload areas in the component
+    const uploadAreas = component.querySelectorAll('.upload-area, .do-dont-upload-area');
+    
+    uploadAreas.forEach((uploadArea, index) => {
+        let imageData = null;
+        
+        // Get the appropriate image data based on component type
+        if (component.classList.contains('logo-variant-component')) {
+            const variantKey = `variant${index + 1}`;
+            imageData = componentData.data.imageData[variantKey];
+        } else if (component.classList.contains('do-dont-component')) {
+            const type = uploadArea.dataset.type || `area${index}`;
+            imageData = componentData.data.imageData[type];
+        }
+        
+        if (imageData && Object.keys(imageData).length > 0) {
+            // Store the image data in the dataset
+            uploadArea.dataset.images = JSON.stringify(imageData);
+            // Display the uploaded image
+            displayUploadedImage(uploadArea);
+        }
+    });
+}
+
 // Restore components from saved data
 function restoreComponents() {
     const logosContent = document.querySelector('.logos-content');
@@ -1382,7 +1442,7 @@ function restoreComponents() {
     }
     
     // Restore each component
-    savedData.components.forEach(componentData => {
+    savedData.components.forEach((componentData, index) => {
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = componentData.html;
         const component = tempDiv.firstElementChild;
@@ -1404,9 +1464,13 @@ function restoreComponents() {
                     handleLogoDownload(format, uploadArea);
                 });
             });
+            // Restore uploaded images
+            restoreComponentImages(component, index);
         } else if (component.classList.contains('do-dont-component')) {
             initializeDoDontUploadAreas(component);
             initializeDeleteButton(component);
+            // Restore uploaded images
+            restoreComponentImages(component, index);
         } else if (component.classList.contains('divider-component') || component.classList.contains('heading-component')) {
             initializeDeleteButton(component);
         }
