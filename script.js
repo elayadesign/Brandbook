@@ -1250,8 +1250,8 @@ function initializeDeleteButton(component) {
     }
 }
 
-// Save data to localStorage
-function saveData() {
+// Save data to Firebase
+async function saveData() {
     const logosContent = document.querySelector('.logos-content');
     if (!logosContent) return;
     
@@ -1290,26 +1290,70 @@ function saveData() {
     savedData.lastSaved = Date.now();
     
     try {
-        localStorage.setItem('brandbook_data', JSON.stringify(savedData));
-        console.log('Data saved successfully');
-        showSaveStatus('Saved', 'success');
+        // Try Firebase first, fallback to localStorage
+        if (window.firebaseDB && window.firebaseDoc && window.firebaseSetDoc) {
+            const docRef = window.firebaseDoc(window.firebaseDB, 'brandbook', 'data');
+            await window.firebaseSetDoc(docRef, savedData);
+            console.log('Data saved to Firebase successfully');
+            showSaveStatus('Saved to cloud', 'success');
+        } else {
+            // Fallback to localStorage
+            localStorage.setItem('brandbook_data', JSON.stringify(savedData));
+            console.log('Data saved to localStorage (Firebase not available)');
+            showSaveStatus('Saved locally', 'success');
+        }
     } catch (error) {
         console.error('Error saving data:', error);
-        showSaveStatus('Save failed', 'error');
+        // Fallback to localStorage
+        try {
+            localStorage.setItem('brandbook_data', JSON.stringify(savedData));
+            showSaveStatus('Saved locally (cloud failed)', 'warning');
+        } catch (localError) {
+            showSaveStatus('Save failed', 'error');
+        }
     }
 }
 
-// Load data from localStorage
-function loadSavedData() {
+// Load data from Firebase
+async function loadSavedData() {
     try {
+        // Try Firebase first
+        if (window.firebaseDB && window.firebaseDoc && window.firebaseGetDoc) {
+            const docRef = window.firebaseDoc(window.firebaseDB, 'brandbook', 'data');
+            const docSnap = await window.firebaseGetDoc(docRef);
+            
+            if (docSnap.exists()) {
+                savedData = docSnap.data();
+                console.log('Data loaded from Firebase successfully');
+                showSaveStatus('Loaded from cloud', 'success');
+                return;
+            }
+        }
+        
+        // Fallback to localStorage
         const stored = localStorage.getItem('brandbook_data');
         if (stored) {
             savedData = JSON.parse(stored);
-            console.log('Data loaded successfully');
+            console.log('Data loaded from localStorage');
+            showSaveStatus('Loaded locally', 'info');
+        } else {
+            savedData = { components: [], lastSaved: null };
         }
     } catch (error) {
         console.error('Error loading data:', error);
-        savedData = { components: [], lastSaved: null };
+        // Fallback to localStorage
+        try {
+            const stored = localStorage.getItem('brandbook_data');
+            if (stored) {
+                savedData = JSON.parse(stored);
+                showSaveStatus('Loaded locally (cloud failed)', 'warning');
+            } else {
+                savedData = { components: [], lastSaved: null };
+            }
+        } catch (localError) {
+            savedData = { components: [], lastSaved: null };
+            showSaveStatus('Load failed', 'error');
+        }
     }
 }
 
@@ -1409,7 +1453,10 @@ function showSaveStatus(message, type) {
         font-weight: 500;
         z-index: 1000;
         transition: all 0.3s ease;
-        ${type === 'success' ? 'background: #4CAF50; color: white;' : 'background: #f44336; color: white;'}
+        ${type === 'success' ? 'background: #4CAF50; color: white;' : 
+          type === 'warning' ? 'background: #FF9800; color: white;' :
+          type === 'info' ? 'background: #2196F3; color: white;' :
+          'background: #f44336; color: white;'}
     `;
     
     document.body.appendChild(status);
