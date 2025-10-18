@@ -428,9 +428,9 @@ button {
     justify-content: center;
     width: 60px;
     height: 60px;
-    background: #1D1B20;
-    color: #ffffff;
-    border: none;
+    background: transparent;
+    color: #2196F3;
+    border: 2px solid #2196F3;
     border-radius: 50%;
     cursor: pointer;
     font-family: 'Inter', sans-serif;
@@ -439,27 +439,12 @@ button {
     transition: all 0.2s ease;
     margin: 24px auto;
     position: relative;
-    overflow: hidden;
-}
-
-.add-component-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-        linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(255,255,255,0.1) 1px, transparent 1px);
-    background-size: 4px 4px;
-    opacity: 0.3;
-    pointer-events: none;
 }
 
 .add-component-btn:hover {
-    background: #2a282e;
+    background: rgba(33, 150, 243, 0.1);
     transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
 }
 
 .add-component-btn svg {
@@ -467,6 +452,7 @@ button {
     height: 24px;
     z-index: 1;
     position: relative;
+    stroke: #2196F3;
 }
 
 /* Upload Modal */
