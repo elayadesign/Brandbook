@@ -255,32 +255,65 @@ function showUploadModal(variant, uploadArea) {
     modal.innerHTML = `
         <div class="modal-overlay">
             <div class="modal-content">
-                <h3>Upload Image - Variant ${variant}</h3>
-                <div class="upload-options">
-                    <div class="upload-option">
-                        <label for="fileInput" class="upload-file-btn">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
-                                <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
-                                <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2"/>
-                                <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2"/>
-                                <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2"/>
-                            </svg>
-                            Upload from Computer
-                        </label>
-                        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                <h3>Upload Images - Variant ${variant}</h3>
+                <div class="upload-formats">
+                    <!-- PNG Upload Section -->
+                    <div class="format-section">
+                        <h4>PNG Format</h4>
+                        <div class="upload-options">
+                            <div class="upload-option">
+                                <label for="pngFileInput" class="upload-file-btn">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
+                                        <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
+                                        <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2"/>
+                                        <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2"/>
+                                        <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                    Upload PNG from Computer
+                                </label>
+                                <input type="file" id="pngFileInput" accept=".png,image/png" style="display: none;">
+                            </div>
+                            <div class="upload-divider">
+                                <span>OR</span>
+                            </div>
+                            <div class="upload-option">
+                                <label for="pngUrlInput">Paste PNG URL:</label>
+                                <input type="url" id="pngUrlInput" placeholder="https://example.com/image.png">
+                            </div>
+                        </div>
                     </div>
-                    <div class="upload-divider">
-                        <span>OR</span>
-                    </div>
-                    <div class="upload-option">
-                        <label for="urlInput">Paste Image URL:</label>
-                        <input type="url" id="urlInput" placeholder="https://example.com/image.png">
+                    
+                    <!-- SVG Upload Section -->
+                    <div class="format-section">
+                        <h4>SVG Format</h4>
+                        <div class="upload-options">
+                            <div class="upload-option">
+                                <label for="svgFileInput" class="upload-file-btn">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
+                                        <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
+                                        <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2"/>
+                                        <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2"/>
+                                        <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                    Upload SVG from Computer
+                                </label>
+                                <input type="file" id="svgFileInput" accept=".svg,image/svg+xml" style="display: none;">
+                            </div>
+                            <div class="upload-divider">
+                                <span>OR</span>
+                            </div>
+                            <div class="upload-option">
+                                <label for="svgUrlInput">Paste SVG URL:</label>
+                                <input type="url" id="svgUrlInput" placeholder="https://example.com/image.svg">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-actions">
                     <button class="btn-cancel">Cancel</button>
-                    <button class="btn-upload" disabled>Upload</button>
+                    <button class="btn-upload" disabled>Upload Images</button>
                 </div>
             </div>
         </div>
@@ -288,38 +321,77 @@ function showUploadModal(variant, uploadArea) {
     
     document.body.appendChild(modal);
     
-    const fileInput = modal.querySelector('#fileInput');
-    const urlInput = modal.querySelector('#urlInput');
+    const pngFileInput = modal.querySelector('#pngFileInput');
+    const pngUrlInput = modal.querySelector('#pngUrlInput');
+    const svgFileInput = modal.querySelector('#svgFileInput');
+    const svgUrlInput = modal.querySelector('#svgUrlInput');
     const uploadBtn = modal.querySelector('.btn-upload');
     const cancelBtn = modal.querySelector('.btn-cancel');
     
-    // File input change handler
-    fileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            urlInput.value = '';
-            uploadBtn.disabled = false;
+    // Check if any input has content
+    function checkUploadButton() {
+        const hasPngFile = pngFileInput.files.length > 0;
+        const hasPngUrl = pngUrlInput.value.trim() !== '';
+        const hasSvgFile = svgFileInput.files.length > 0;
+        const hasSvgUrl = svgUrlInput.value.trim() !== '';
+        
+        uploadBtn.disabled = !((hasPngFile || hasPngUrl) && (hasSvgFile || hasSvgUrl));
+    }
+    
+    // PNG file input change handler
+    pngFileInput.addEventListener('change', function(e) {
+        if (e.target.files[0]) {
+            pngUrlInput.value = '';
         }
+        checkUploadButton();
     });
     
-    // URL input change handler
-    urlInput.addEventListener('input', function() {
+    // PNG URL input change handler
+    pngUrlInput.addEventListener('input', function() {
         if (this.value.trim()) {
-            fileInput.value = '';
-            uploadBtn.disabled = false;
-        } else {
-            uploadBtn.disabled = true;
+            pngFileInput.value = '';
         }
+        checkUploadButton();
+    });
+    
+    // SVG file input change handler
+    svgFileInput.addEventListener('change', function(e) {
+        if (e.target.files[0]) {
+            svgUrlInput.value = '';
+        }
+        checkUploadButton();
+    });
+    
+    // SVG URL input change handler
+    svgUrlInput.addEventListener('input', function() {
+        if (this.value.trim()) {
+            svgFileInput.value = '';
+        }
+        checkUploadButton();
     });
     
     // Upload button handler
     uploadBtn.addEventListener('click', function() {
-        if (fileInput.files[0]) {
-            handleFileUpload(fileInput.files[0], uploadArea);
-        } else if (urlInput.value.trim()) {
-            handleUrlUpload(urlInput.value.trim(), uploadArea);
+        const uploads = [];
+        
+        // Handle PNG upload
+        if (pngFileInput.files[0]) {
+            uploads.push(handleFileUpload(pngFileInput.files[0], uploadArea, 'png'));
+        } else if (pngUrlInput.value.trim()) {
+            uploads.push(handleUrlUpload(pngUrlInput.value.trim(), uploadArea, 'png'));
         }
-        document.body.removeChild(modal);
+        
+        // Handle SVG upload
+        if (svgFileInput.files[0]) {
+            uploads.push(handleFileUpload(svgFileInput.files[0], uploadArea, 'svg'));
+        } else if (svgUrlInput.value.trim()) {
+            uploads.push(handleUrlUpload(svgUrlInput.value.trim(), uploadArea, 'svg'));
+        }
+        
+        // Wait for all uploads to complete
+        Promise.all(uploads).then(() => {
+            document.body.removeChild(modal);
+        });
     });
     
     // Cancel button handler
@@ -336,47 +408,79 @@ function showUploadModal(variant, uploadArea) {
 }
 
 // Handle file upload
-function handleFileUpload(file, uploadArea) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        displayUploadedImage(e.target.result, uploadArea);
-    };
-    reader.readAsDataURL(file);
+function handleFileUpload(file, uploadArea, format) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            storeUploadedImage(e.target.result, uploadArea, format);
+            resolve();
+        };
+        reader.onerror = function() {
+            reject('Error reading file');
+        };
+        reader.readAsDataURL(file);
+    });
 }
 
 // Handle URL upload
-function handleUrlUpload(url, uploadArea) {
-    // Create a new image to test if URL is valid
-    const img = new Image();
-    img.onload = function() {
-        displayUploadedImage(url, uploadArea);
-    };
-    img.onerror = function() {
-        alert('Invalid image URL. Please check the link and try again.');
-    };
-    img.src = url;
+function handleUrlUpload(url, uploadArea, format) {
+    return new Promise((resolve, reject) => {
+        // Create a new image to test if URL is valid
+        const img = new Image();
+        img.onload = function() {
+            storeUploadedImage(url, uploadArea, format);
+            resolve();
+        };
+        img.onerror = function() {
+            alert(`Invalid ${format.toUpperCase()} image URL. Please check the link and try again.`);
+            reject('Invalid URL');
+        };
+        img.src = url;
+    });
+}
+
+// Store uploaded image data
+function storeUploadedImage(imageSrc, uploadArea, format) {
+    // Store the image data in the upload area's dataset
+    if (!uploadArea.dataset.images) {
+        uploadArea.dataset.images = JSON.stringify({});
+    }
+    
+    const images = JSON.parse(uploadArea.dataset.images);
+    images[format] = imageSrc;
+    uploadArea.dataset.images = JSON.stringify(images);
+    
+    // Display the uploaded image
+    displayUploadedImage(uploadArea);
 }
 
 // Display uploaded image
-function displayUploadedImage(imageSrc, uploadArea) {
+function displayUploadedImage(uploadArea) {
     const uploadIcon = uploadArea.querySelector('.upload-icon');
     const uploadedImage = uploadArea.querySelector('.uploaded-image');
     
-    // Hide upload icon and show uploaded image
-    uploadIcon.style.display = 'none';
-    uploadedImage.style.display = 'block';
-    uploadedImage.innerHTML = `<img src="${imageSrc}" alt="Uploaded logo" style="width: 100%; height: 100%; object-fit: contain;">`;
+    const images = JSON.parse(uploadArea.dataset.images || '{}');
     
-    // Add hover effect to show upload icon again
-    uploadArea.addEventListener('mouseenter', function() {
-        uploadIcon.style.display = 'flex';
-        uploadedImage.style.opacity = '0.7';
-    });
-    
-    uploadArea.addEventListener('mouseleave', function() {
+    if (Object.keys(images).length > 0) {
+        // Hide upload icon and show uploaded image
         uploadIcon.style.display = 'none';
-        uploadedImage.style.opacity = '1';
-    });
+        uploadedImage.style.display = 'block';
+        
+        // Show the first available image (prefer PNG, then SVG)
+        const imageSrc = images.png || images.svg;
+        uploadedImage.innerHTML = `<img src="${imageSrc}" alt="Uploaded logo" style="width: 100%; height: 100%; object-fit: contain;">`;
+        
+        // Add hover effect to show upload icon again
+        uploadArea.addEventListener('mouseenter', function() {
+            uploadIcon.style.display = 'flex';
+            uploadedImage.style.opacity = '0.7';
+        });
+        
+        uploadArea.addEventListener('mouseleave', function() {
+            uploadIcon.style.display = 'none';
+            uploadedImage.style.opacity = '1';
+        });
+    }
 }
 
 // Show app/social content
