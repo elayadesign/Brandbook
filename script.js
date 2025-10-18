@@ -572,9 +572,9 @@ function displayUploadedImage(uploadArea) {
         uploadIcon.style.display = 'none';
         uploadedImage.style.display = 'block';
         
-        // Show the first available image (prefer PNG, then SVG)
-        const imageSrc = images.png || images.svg;
-        uploadedImage.innerHTML = `<img src="${imageSrc}" alt="Uploaded logo" style="width: 100%; height: 100%; object-fit: contain;">`;
+        // Show the first available image (prefer PNG, then SVG, or uploaded for Do/Don't)
+        const imageSrc = images.png || images.svg || images.uploaded;
+        uploadedImage.innerHTML = `<img src="${imageSrc}" alt="Uploaded image" style="width: 100%; height: 100%; object-fit: contain;">`;
         
         // Add hover effect to show upload icon again
         uploadArea.addEventListener('mouseenter', function() {
@@ -1219,6 +1219,15 @@ function displayDoDontUploadedImage(imageSrc, uploadArea) {
     const uploadIcon = uploadArea.querySelector('.upload-icon');
     const uploadedImage = uploadArea.querySelector('.uploaded-image');
     
+    // Store the image data in the dataset for saving
+    if (!uploadArea.dataset.images) {
+        uploadArea.dataset.images = JSON.stringify({});
+    }
+    
+    const images = JSON.parse(uploadArea.dataset.images);
+    images.uploaded = imageSrc; // Store as 'uploaded' for Do and Don't
+    uploadArea.dataset.images = JSON.stringify(images);
+    
     // Hide upload icon and show uploaded image
     uploadIcon.style.display = 'none';
     uploadedImage.style.display = 'block';
@@ -1234,6 +1243,9 @@ function displayDoDontUploadedImage(imageSrc, uploadArea) {
         uploadIcon.style.display = 'none';
         uploadedImage.style.opacity = '1';
     });
+    
+    // Save data after image upload
+    saveData();
 }
 
 // Initialize delete button functionality
@@ -1418,6 +1430,10 @@ function restoreComponentImages(component, componentIndex) {
         } else if (component.classList.contains('do-dont-component')) {
             const type = uploadArea.dataset.type || `area${index}`;
             imageData = componentData.data.imageData[type];
+            // For Do and Don't, check if there's an 'uploaded' key
+            if (imageData && imageData.uploaded) {
+                imageData = { uploaded: imageData.uploaded };
+            }
         }
         
         if (imageData && Object.keys(imageData).length > 0) {
