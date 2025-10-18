@@ -131,26 +131,24 @@ function showLogosContent() {
     if (!logosContent) {
         logosContent = document.createElement('div');
         logosContent.className = 'logos-content';
-        // Start with empty content - no initial component
-        logosContent.innerHTML = '';
         mainContent.appendChild(logosContent);
     }
     
-    // Always ensure plus button exists
-    let addButton = logosContent.querySelector('.add-component-btn');
-    if (!addButton) {
-        addButton = document.createElement('button');
-        addButton.className = 'add-component-btn';
-        addButton.innerHTML = `
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
-                <path d="M10 6v8M6 10h8" stroke="currentColor" stroke-width="2"/>
-            </svg>
-            Add Logo Variant
-        `;
-        addButton.addEventListener('click', showAddComponentModal);
-        logosContent.appendChild(addButton);
-    }
+    // Always clear existing content and start fresh with only plus button
+    logosContent.innerHTML = '';
+    
+    // Create and add the plus button
+    const addButton = document.createElement('button');
+    addButton.className = 'add-component-btn';
+    addButton.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+            <path d="M10 6v8M6 10h8" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        Add Logo Variant
+    `;
+    addButton.addEventListener('click', showAddComponentModal);
+    logosContent.appendChild(addButton);
     
     logosContent.style.display = 'block';
 }
