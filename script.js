@@ -1446,10 +1446,16 @@ function restoreComponentImages(component, componentIndex) {
     // Get the component data by index
     const componentData = savedData.components[componentIndex];
     
-    if (!componentData || !componentData.data.imageData) return;
+    console.log('Restoring images for component:', componentIndex, componentData);
+    
+    if (!componentData || !componentData.data || !componentData.data.imageData) {
+        console.log('No image data found for component:', componentIndex);
+        return;
+    }
     
     // Find all upload areas in the component
     const uploadAreas = component.querySelectorAll('.upload-area, .do-dont-upload-area');
+    console.log('Found upload areas:', uploadAreas.length);
     
     uploadAreas.forEach((uploadArea, index) => {
         let imageData = null;
@@ -1458,9 +1464,11 @@ function restoreComponentImages(component, componentIndex) {
         if (component.classList.contains('logo-variant-component')) {
             const variantKey = `variant${index + 1}`;
             imageData = componentData.data.imageData[variantKey];
+            console.log(`Logo variant ${variantKey} image data:`, imageData);
         } else if (component.classList.contains('do-dont-component')) {
             const type = uploadArea.dataset.type || `area${index}`;
             imageData = componentData.data.imageData[type];
+            console.log(`Do/Don't ${type} image data:`, imageData);
             // For Do and Don't, check if there's an 'uploaded' key
             if (imageData && imageData.uploaded) {
                 imageData = { uploaded: imageData.uploaded };
@@ -1468,10 +1476,22 @@ function restoreComponentImages(component, componentIndex) {
         }
         
         if (imageData && Object.keys(imageData).length > 0) {
+            console.log('Restoring image data:', imageData);
             // Store the image data in the dataset
             uploadArea.dataset.images = JSON.stringify(imageData);
-            // Display the uploaded image
-            displayUploadedImage(uploadArea);
+            // Display the uploaded image - use the appropriate function based on component type
+            if (component.classList.contains('do-dont-component')) {
+                // For Do/Don't components, use the specific function
+                const imageSrc = imageData.uploaded || imageData.png || imageData.svg;
+                if (imageSrc) {
+                    displayDoDontUploadedImage(imageSrc, uploadArea);
+                }
+            } else {
+                // For logo variant components, use the general function
+                displayUploadedImage(uploadArea);
+            }
+        } else {
+            console.log('No image data to restore for upload area:', index);
         }
     });
 }
