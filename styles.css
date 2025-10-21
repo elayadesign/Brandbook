@@ -268,8 +268,53 @@ button {
     position: relative;
 }
 
-.component-header:hover .delete-component-btn {
+.component-header:hover .delete-component-btn,
+.component-header:hover .drag-handle {
     opacity: 1;
+}
+
+/* Drag Handle */
+.drag-handle {
+    position: absolute;
+    top: 0;
+    left: -32px;
+    background: #4A4458;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    opacity: 0;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.drag-handle:hover {
+    background: #3a3448;
+    transform: scale(1.1);
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+.drag-handle svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Dragging state */
+.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
+.drag-over {
+    border-top: 3px solid #2196F3;
 }
 
 /* Delete Component Button */

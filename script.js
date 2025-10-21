@@ -567,6 +567,9 @@ function addLogoVariantComponent(title, variant1, variant2) {
     // Initialize delete functionality
     initializeDeleteButton(newComponent);
     
+    // Initialize drag and drop functionality
+    initializeDragAndDrop(newComponent);
+    
     // Save data
     saveData();
 }
@@ -1177,6 +1180,9 @@ function addDoDontComponent(title, doText, dontText) {
     // Initialize delete functionality
     initializeDeleteButton(newComponent);
     
+    // Initialize drag and drop functionality
+    initializeDragAndDrop(newComponent);
+    
     // Save data
     saveData();
 }
@@ -1188,8 +1194,16 @@ function addDivider() {
     
     const divider = document.createElement('div');
     divider.className = 'divider-component';
+    divider.setAttribute('draggable', 'false');
     divider.innerHTML = `
         <div class="component-header">
+            <button class="drag-handle" title="Drag to reorder">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <line x1="9" y1="6" x2="15" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="9" y1="12" x2="15" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="9" y1="18" x2="15" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
             <div class="divider-line"></div>
             <button class="delete-component-btn" title="Delete component">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -1201,6 +1215,9 @@ function addDivider() {
     
     // Add delete functionality
     initializeDeleteButton(divider);
+    
+    // Initialize drag and drop functionality
+    initializeDragAndDrop(divider);
     
     // Insert before the add button
     logosContent.insertBefore(divider, addButton);
@@ -1216,8 +1233,16 @@ function addHeading(level) {
     
     const heading = document.createElement('div');
     heading.className = `heading-component heading-${level}`;
+    heading.setAttribute('draggable', 'false');
     heading.innerHTML = `
         <div class="component-header">
+            <button class="drag-handle" title="Drag to reorder">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <line x1="9" y1="6" x2="15" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="9" y1="12" x2="15" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="9" y1="18" x2="15" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
             <h${level} contenteditable="true" class="editable-heading">Heading ${level}</h${level}>
             <button class="delete-component-btn" title="Delete component">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -1230,6 +1255,9 @@ function addHeading(level) {
     // Add delete functionality
     initializeDeleteButton(heading);
     
+    // Initialize drag and drop functionality
+    initializeDragAndDrop(heading);
+    
     // Insert before the add button
     logosContent.insertBefore(heading, addButton);
     
@@ -1240,8 +1268,15 @@ function addHeading(level) {
 // Logo Variant Component
 function createLogoVariant(title, variant1Name, variant2Name) {
     return `
-        <div class="logo-variant-component">
+        <div class="logo-variant-component" draggable="false">
             <div class="component-header">
+                <button class="drag-handle" title="Drag to reorder">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <line x1="9" y1="6" x2="15" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="9" y1="12" x2="15" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="9" y1="18" x2="15" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
                 <h2 class="variant-title" contenteditable="true">${title}</h2>
                 <button class="delete-component-btn" title="Delete component">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -1296,8 +1331,15 @@ function createLogoVariant(title, variant1Name, variant2Name) {
 // Do and Don't Component
 function createDoDontComponent(title, doText, dontText) {
     return `
-        <div class="do-dont-component">
+        <div class="do-dont-component" draggable="false">
             <div class="component-header">
+                <button class="drag-handle" title="Drag to reorder">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <line x1="9" y1="6" x2="15" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="9" y1="12" x2="15" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="9" y1="18" x2="15" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
                 <h2 class="do-dont-title" contenteditable="true">${title}</h2>
                 <button class="delete-component-btn" title="Delete component">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -1511,6 +1553,96 @@ function initializeDeleteButton(component) {
             }
         });
     }
+}
+
+// Initialize drag and drop functionality
+function initializeDragAndDrop(component) {
+    const dragHandle = component.querySelector('.drag-handle');
+    if (!dragHandle) return;
+    
+    let draggedElement = null;
+    
+    // Make component draggable when drag handle is used
+    dragHandle.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        component.setAttribute('draggable', 'true');
+    });
+    
+    component.addEventListener('dragstart', function(e) {
+        if (component.getAttribute('draggable') !== 'true') {
+            e.preventDefault();
+            return;
+        }
+        
+        draggedElement = component;
+        component.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/html', component.innerHTML);
+    });
+    
+    component.addEventListener('dragend', function(e) {
+        component.classList.remove('dragging');
+        component.setAttribute('draggable', 'false');
+        
+        // Remove drag-over class from all components
+        document.querySelectorAll('.drag-over').forEach(el => {
+            el.classList.remove('drag-over');
+        });
+        
+        saveData(); // Save new order
+    });
+    
+    component.addEventListener('dragover', function(e) {
+        if (draggedElement === component) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        
+        const afterElement = getDragAfterElement(component, e.clientY);
+        component.classList.add('drag-over');
+    });
+    
+    component.addEventListener('dragleave', function(e) {
+        component.classList.remove('drag-over');
+    });
+    
+    component.addEventListener('drop', function(e) {
+        e.preventDefault();
+        component.classList.remove('drag-over');
+        
+        if (draggedElement === component) return;
+        
+        const logosContent = document.querySelector('.logos-content');
+        const addButton = logosContent.querySelector('.add-component-btn');
+        
+        // Get all components
+        const allComponents = Array.from(logosContent.querySelectorAll('.logo-variant-component, .do-dont-component, .divider-component, .heading-component'));
+        const draggedIndex = allComponents.indexOf(draggedElement);
+        const targetIndex = allComponents.indexOf(component);
+        
+        if (draggedIndex < targetIndex) {
+            // Moving down
+            component.parentNode.insertBefore(draggedElement, component.nextSibling);
+        } else {
+            // Moving up
+            component.parentNode.insertBefore(draggedElement, component);
+        }
+    });
+}
+
+// Get element after cursor position
+function getDragAfterElement(container, y) {
+    const draggableElements = [...container.querySelectorAll('.logo-variant-component:not(.dragging), .do-dont-component:not(.dragging), .divider-component:not(.dragging), .heading-component:not(.dragging)')];
+    
+    return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        
+        if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child };
+        } else {
+            return closest;
+        }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
 }
 
 // Save data to Firebase
@@ -1744,6 +1876,7 @@ function restoreComponents() {
         if (component.classList.contains('logo-variant-component')) {
             initializeUploadAreas(component);
             initializeDeleteButton(component);
+            initializeDragAndDrop(component);
             // Re-initialize download buttons
             const downloadBtns = component.querySelectorAll('.download-btn');
             downloadBtns.forEach(btn => {
@@ -1759,10 +1892,12 @@ function restoreComponents() {
         } else if (component.classList.contains('do-dont-component')) {
             initializeDoDontUploadAreas(component);
             initializeDeleteButton(component);
+            initializeDragAndDrop(component);
             // Restore uploaded images
             restoreComponentImages(component, index);
         } else if (component.classList.contains('divider-component') || component.classList.contains('heading-component')) {
             initializeDeleteButton(component);
+            initializeDragAndDrop(component);
         }
     });
 }
