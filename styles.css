@@ -394,14 +394,12 @@ button {
 
 .dropdown-content {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     background: white;
     border-radius: 12px;
     padding: 16px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     min-width: 200px;
+    z-index: 1001;
 }
 
 .dropdown-item {

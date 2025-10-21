@@ -168,6 +168,9 @@ function showLogosContent() {
 
 // Show dropdown for adding new components
 function showAddComponentDropdown() {
+    const addButton = document.querySelector('.add-component-btn');
+    const buttonRect = addButton.getBoundingClientRect();
+    
     const dropdown = document.createElement('div');
     dropdown.className = 'add-component-dropdown';
     dropdown.innerHTML = `
@@ -216,6 +219,33 @@ function showAddComponentDropdown() {
     `;
     
     document.body.appendChild(dropdown);
+    
+    // Position the dropdown next to the plus button
+    const dropdownContent = dropdown.querySelector('.dropdown-content');
+    const dropdownRect = dropdownContent.getBoundingClientRect();
+    
+    // Calculate position - show below the button, centered horizontally
+    let top = buttonRect.bottom + 8; // 8px gap below button
+    let left = buttonRect.left + (buttonRect.width / 2) - (dropdownRect.width / 2); // Center horizontally
+    
+    // Ensure dropdown doesn't go off screen
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // Adjust horizontal position if it would go off screen
+    if (left < 8) {
+        left = 8; // 8px margin from left edge
+    } else if (left + dropdownRect.width > viewportWidth - 8) {
+        left = viewportWidth - dropdownRect.width - 8; // 8px margin from right edge
+    }
+    
+    // Adjust vertical position if it would go off screen
+    if (top + dropdownRect.height > viewportHeight - 8) {
+        top = buttonRect.top - dropdownRect.height - 8; // Show above button instead
+    }
+    
+    dropdownContent.style.top = `${top}px`;
+    dropdownContent.style.left = `${left}px`;
     
     // Handle dropdown item clicks
     dropdown.querySelectorAll('.dropdown-item').forEach(item => {
