@@ -29,10 +29,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     initializeNavigation();
     initializeDownloadButtons();
     initializeMobileMenu();
+    initializeBrandLogo();
     // Load saved data and wait for it to complete
     await loadSavedData();
     // Show initial content (Logos page)
     showLogosContent();
+    // Restore custom logo if saved
+    restoreBrandLogo();
 });
 
 // Initialize navigation functionality
@@ -95,6 +98,183 @@ function initializeMobileMenu() {
             const sidebar = document.querySelector('.sidebar');
             sidebar.classList.toggle('open');
         });
+    }
+}
+
+// Initialize brand logo functionality
+function initializeBrandLogo() {
+    const brandLogo = document.getElementById('brand-logo');
+    const brandName = document.getElementById('brand-name');
+    
+    // Handle logo click
+    brandLogo.addEventListener('click', function(e) {
+        // Don't trigger if clicking on the brand name text
+        if (e.target === brandName || e.target.closest('.logo-text')) {
+            return;
+        }
+        showLogoUploadModal();
+    });
+    
+    // Save brand name when it changes
+    brandName.addEventListener('blur', function() {
+        saveBrandSettings();
+    });
+    
+    brandName.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            this.blur();
+        }
+    });
+}
+
+// Show logo upload modal
+function showLogoUploadModal() {
+    const modal = document.createElement('div');
+    modal.className = 'upload-modal';
+    modal.innerHTML = `
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <h3>Change Brand Logo</h3>
+                <div class="upload-options">
+                    <div class="upload-option">
+                        <label for="logoFileInput" class="upload-file-btn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
+                                <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
+                                <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2"/>
+                                <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2"/>
+                                <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                            Upload Logo from Computer
+                        </label>
+                        <input type="file" id="logoFileInput" accept="image/*" style="display: none;">
+                    </div>
+                    <div class="upload-divider">
+                        <span>OR</span>
+                    </div>
+                    <div class="upload-option">
+                        <label for="logoUrlInput">Paste Logo URL:</label>
+                        <input type="url" id="logoUrlInput" placeholder="https://example.com/logo.png">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-cancel">Cancel</button>
+                    <button class="btn-upload" disabled>Upload Logo</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    const fileInput = modal.querySelector('#logoFileInput');
+    const urlInput = modal.querySelector('#logoUrlInput');
+    const uploadBtn = modal.querySelector('.btn-upload');
+    const cancelBtn = modal.querySelector('.btn-cancel');
+    
+    // Check if any input has content
+    function checkUploadButton() {
+        const hasFile = fileInput.files.length > 0;
+        const hasUrl = urlInput.value.trim() !== '';
+        uploadBtn.disabled = !(hasFile || hasUrl);
+    }
+    
+    // File input change handler
+    fileInput.addEventListener('change', function(e) {
+        if (e.target.files[0]) {
+            urlInput.value = '';
+        }
+        checkUploadButton();
+    });
+    
+    // URL input change handler
+    urlInput.addEventListener('input', function() {
+        if (this.value.trim()) {
+            fileInput.value = '';
+        }
+        checkUploadButton();
+    });
+    
+    // Upload button handler
+    uploadBtn.addEventListener('click', function() {
+        if (fileInput.files[0]) {
+            handleLogoFileUpload(fileInput.files[0]);
+        } else if (urlInput.value.trim()) {
+            handleLogoUrlUpload(urlInput.value.trim());
+        }
+        document.body.removeChild(modal);
+    });
+    
+    // Cancel button handler
+    cancelBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+    });
+    
+    // Close on overlay click
+    modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
+        if (e.target === modal.querySelector('.modal-overlay')) {
+            document.body.removeChild(modal);
+        }
+    });
+}
+
+// Handle logo file upload
+function handleLogoFileUpload(file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        updateBrandLogo(e.target.result);
+    };
+    reader.readAsDataURL(file);
+}
+
+// Handle logo URL upload
+function handleLogoUrlUpload(url) {
+    const img = new Image();
+    img.onload = function() {
+        updateBrandLogo(url);
+    };
+    img.onerror = function() {
+        alert('Invalid logo URL. Please check the link and try again.');
+    };
+    img.src = url;
+}
+
+// Update brand logo
+function updateBrandLogo(logoSrc) {
+    const logoImage = document.getElementById('logo-image');
+    logoImage.src = logoSrc;
+    saveBrandSettings();
+    showNotification('Logo updated successfully!');
+}
+
+// Save brand settings
+function saveBrandSettings() {
+    const logoImage = document.getElementById('logo-image');
+    const brandName = document.getElementById('brand-name');
+    
+    const brandSettings = {
+        logo: logoImage.src,
+        name: brandName.textContent
+    };
+    
+    localStorage.setItem('brand_settings', JSON.stringify(brandSettings));
+}
+
+// Restore brand logo
+function restoreBrandLogo() {
+    const stored = localStorage.getItem('brand_settings');
+    if (stored) {
+        const brandSettings = JSON.parse(stored);
+        const logoImage = document.getElementById('logo-image');
+        const brandName = document.getElementById('brand-name');
+        
+        if (brandSettings.logo) {
+            logoImage.src = brandSettings.logo;
+        }
+        if (brandSettings.name) {
+            brandName.textContent = brandSettings.name;
+        }
     }
 }
 
