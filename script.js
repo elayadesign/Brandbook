@@ -367,6 +367,9 @@ function addLogoVariantComponent(title, variant1, variant2) {
     // Insert before the add button
     logosContent.insertBefore(newComponent, addButton);
     
+    // Inject actual SVG icons into the component
+    injectIconsIntoComponent(newComponent);
+    
     // Re-initialize download buttons for the new component
     const newDownloadBtns = newComponent.querySelectorAll('.download-btn');
     newDownloadBtns.forEach(btn => {
@@ -386,6 +389,25 @@ function addLogoVariantComponent(title, variant1, variant2) {
     
     // Save data
     saveData();
+}
+
+// Inject icons into component after creation
+function injectIconsIntoComponent(component) {
+    // Replace upload icons
+    const uploadIcons = component.querySelectorAll('.upload-icon');
+    uploadIcons.forEach(icon => {
+        if (icon.textContent.includes('${getUploadIcon()}')) {
+            icon.innerHTML = getUploadIcon();
+        }
+    });
+    
+    // Replace download icons
+    const downloadBtns = component.querySelectorAll('.download-btn');
+    downloadBtns.forEach(btn => {
+        if (btn.innerHTML.includes('${getDownloadIcon()}')) {
+            btn.innerHTML = btn.innerHTML.replace('${getDownloadIcon()}', getDownloadIcon());
+        }
+    });
 }
 
 // Initialize upload areas for a component
@@ -966,6 +988,9 @@ function addDoDontComponent(title, doText, dontText) {
     // Insert before the add button
     logosContent.insertBefore(newComponent, addButton);
     
+    // Inject actual SVG icons into the component
+    injectIconsIntoComponent(newComponent);
+    
     // Initialize upload functionality for the new component
     initializeDoDontUploadAreas(newComponent);
     
@@ -1531,6 +1556,9 @@ function restoreComponents() {
         
         // Insert before the add button
         logosContent.insertBefore(component, addButton);
+        
+        // Inject icons into restored component
+        injectIconsIntoComponent(component);
         
         // Re-initialize functionality based on component type
         if (component.classList.contains('logo-variant-component')) {
