@@ -24,6 +24,9 @@ function getDownloadIcon() {
 const navItems = document.querySelectorAll('.nav-item');
 const downloadBtns = document.querySelectorAll('.download-btn');
 
+// Drag and drop state
+let draggedElement = null;
+
 // Initialize the app
 document.addEventListener('DOMContentLoaded', async function() {
     initializeNavigation();
@@ -1560,15 +1563,25 @@ function initializeDragAndDrop(component) {
     const dragHandle = component.querySelector('.drag-handle');
     if (!dragHandle) return;
     
-    let draggedElement = null;
-    
-    // Make component draggable when drag handle is used
+    // Make component draggable when drag handle is clicked
     dragHandle.addEventListener('mousedown', function(e) {
         e.preventDefault();
+        e.stopPropagation();
         component.setAttribute('draggable', 'true');
+        console.log('Drag handle clicked, draggable set to true');
+    });
+    
+    // Reset draggable on mouse up
+    dragHandle.addEventListener('mouseup', function(e) {
+        setTimeout(() => {
+            if (!component.classList.contains('dragging')) {
+                component.setAttribute('draggable', 'false');
+            }
+        }, 100);
     });
     
     component.addEventListener('dragstart', function(e) {
+        console.log('Drag start', component.getAttribute('draggable'));
         if (component.getAttribute('draggable') !== 'true') {
             e.preventDefault();
             return;
@@ -1578,11 +1591,14 @@ function initializeDragAndDrop(component) {
         component.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/html', component.innerHTML);
+        console.log('Dragging started');
     });
     
     component.addEventListener('dragend', function(e) {
+        console.log('Drag end');
         component.classList.remove('dragging');
         component.setAttribute('draggable', 'false');
+        draggedElement = null;
         
         // Remove drag-over class from all components
         document.querySelectorAll('.drag-over').forEach(el => {
@@ -1593,11 +1609,9 @@ function initializeDragAndDrop(component) {
     });
     
     component.addEventListener('dragover', function(e) {
-        if (draggedElement === component) return;
+        if (!draggedElement || draggedElement === component) return;
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
-        
-        const afterElement = getDragAfterElement(component, e.clientY);
         component.classList.add('drag-over');
     });
     
@@ -1607,17 +1621,21 @@ function initializeDragAndDrop(component) {
     
     component.addEventListener('drop', function(e) {
         e.preventDefault();
+        e.stopPropagation();
         component.classList.remove('drag-over');
         
-        if (draggedElement === component) return;
+        console.log('Drop on component');
+        
+        if (!draggedElement || draggedElement === component) return;
         
         const logosContent = document.querySelector('.logos-content');
-        const addButton = logosContent.querySelector('.add-component-btn');
         
         // Get all components
         const allComponents = Array.from(logosContent.querySelectorAll('.logo-variant-component, .do-dont-component, .divider-component, .heading-component'));
         const draggedIndex = allComponents.indexOf(draggedElement);
         const targetIndex = allComponents.indexOf(component);
+        
+        console.log('Dragged index:', draggedIndex, 'Target index:', targetIndex);
         
         if (draggedIndex < targetIndex) {
             // Moving down
@@ -1626,6 +1644,8 @@ function initializeDragAndDrop(component) {
             // Moving up
             component.parentNode.insertBefore(draggedElement, component);
         }
+        
+        console.log('Component moved');
     });
 }
 
