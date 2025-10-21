@@ -5,6 +5,21 @@ let savedData = {
     lastSaved: null
 };
 
+// Icon generation functions
+function getUploadIcon() {
+    return `<svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <rect x="2" y="2" width="36" height="36" rx="8" fill="#E0E0E0" stroke="#CAC4D0" stroke-width="2"/>
+        <path d="M20 12v16M12 20h16" stroke="#49454F" stroke-width="2" stroke-linecap="round"/>
+    </svg>`;
+}
+
+function getDownloadIcon() {
+    return `<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M3 12h14l-7-7-7 7z" fill="#49454F"/>
+        <path d="M10 5v10M6 11h8" stroke="#49454F" stroke-width="1" stroke-linecap="round"/>
+    </svg>`;
+}
+
 // DOM Elements
 const navItems = document.querySelectorAll('.nav-item');
 const downloadBtns = document.querySelectorAll('.download-btn');
@@ -635,7 +650,7 @@ function showAppSocialContent() {
                     <div class="asset-item">
                         <div class="upload-area">
                             <div class="upload-icon">
-                                <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                                ${getUploadIcon()}
                             </div>
                         </div>
                         <div class="download-buttons">
@@ -646,7 +661,7 @@ function showAppSocialContent() {
                     <div class="asset-item">
                         <div class="upload-area">
                             <div class="upload-icon">
-                                <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                                ${getUploadIcon()}
                             </div>
                         </div>
                         <div class="download-buttons">
@@ -662,7 +677,7 @@ function showAppSocialContent() {
                     <div class="asset-item">
                         <div class="upload-area">
                             <div class="upload-icon">
-                                <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                                ${getUploadIcon()}
                             </div>
                         </div>
                         <div class="download-buttons">
@@ -673,7 +688,7 @@ function showAppSocialContent() {
                     <div class="asset-item">
                         <div class="upload-area">
                             <div class="upload-icon">
-                                <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                                ${getUploadIcon()}
                             </div>
                         </div>
                         <div class="download-buttons">
@@ -705,7 +720,7 @@ function showProfileContent() {
                     <div class="asset-item">
                         <div class="upload-area">
                             <div class="upload-icon">
-                                <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                                ${getUploadIcon()}
                             </div>
                         </div>
                         <div class="download-buttons">
@@ -716,7 +731,7 @@ function showProfileContent() {
                     <div class="asset-item">
                         <div class="upload-area">
                             <div class="upload-icon">
-                                <img src="http://localhost:3845/assets/d779e3da5fc195460b43359535871eeca60108f5.svg" alt="Upload" width="40" height="40">
+                                ${getUploadIcon()}
                             </div>
                         </div>
                         <div class="download-buttons">
@@ -1039,11 +1054,11 @@ function createLogoVariant(title, variant1Name, variant2Name) {
                     </div>
                     <div class="download-buttons">
                         <button class="download-btn">
-                            <img src="http://localhost:3845/assets/0469ebeaca45b0fd7425a99e3d743795941664bc.svg" alt="Download" width="20" height="20">
+                            ${getDownloadIcon()}
                             Download PNG
                         </button>
                         <button class="download-btn">
-                            <img src="http://localhost:3845/assets/0469ebeaca45b0fd7425a99e3d743795941664bc.svg" alt="Download" width="20" height="20">
+                            ${getDownloadIcon()}
                             Download SVG
                         </button>
                     </div>
@@ -1058,11 +1073,11 @@ function createLogoVariant(title, variant1Name, variant2Name) {
                     </div>
                     <div class="download-buttons">
                         <button class="download-btn">
-                            <img src="http://localhost:3845/assets/0469ebeaca45b0fd7425a99e3d743795941664bc.svg" alt="Download" width="20" height="20">
+                            ${getDownloadIcon()}
                             Download PNG
                         </button>
                         <button class="download-btn">
-                            <img src="http://localhost:3845/assets/0469ebeaca45b0fd7425a99e3d743795941664bc.svg" alt="Download" width="20" height="20">
+                            ${getDownloadIcon()}
                             Download SVG
                         </button>
                     </div>
